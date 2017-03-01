@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <title></title>
+  </head>
+  <body>
+<script>
+$.ajax({
+    type: 'GET',
+    url: 'http://127.0.0.1/projet-dev/serveur/serveur.php/',
+    crossDomain: true,
+    data : "send="+"lourd",
+    complete: function (data) {
+           if (data.readyState === 4 && data.status === 200) {
+              document.getElementById('test').innerHTML=data.responseText
+            }
+    }})
+</script>
+  <div id='test'></div>
+  </body>
+</html>
