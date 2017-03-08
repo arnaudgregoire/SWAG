@@ -1,14 +1,22 @@
+import numpy as np
+import skimage
+import matplotlib
+import scipy
 import networkx as nx
 
-shapefile = 'D://SWAG-master//SWAG-master//donnees//1854_emprise.shp'
+print ("numpy =" ,np.__version__)
+print ("skimage =", skimage.__version__)
+print ("matplotlib = ",matplotlib.__version__)
+print ("scipy =",scipy.__version__)
+print ("networkx =" ,nx.__version__)
 
-def test(shapefile):
-    G = nx.read_shp(shapefile)
-    print(nx.number_of_nodes(G))
+shapefile = "donnees//1854_emprise.shp"
 
 def main(shapefile):
 
     G = nx.read_shp(shapefile)
+    
+    G = G.to_undirected()
     
     # Taille du réseau
     
@@ -66,7 +74,7 @@ def main(shapefile):
     average_shortest_path_length = nx.average_shortest_path_length(G)
     print(average_shortest_path_length)
     # Indice oligopolistique (Rich-club coefficient)
-    rich_club_coefficient = nx.rich_club_coefficient(G)
-    print(rich_club_coefficient)
-    
-test(shapefile)
+    #rich_club_coefficient = nx.rich_club_coefficient(G)
+    #print(rich_club_coefficient)
+
+main(shapefile)
