@@ -1,0 +1,28 @@
+{
+  "name": "arnaud",
+  "version": "1.0.0",
+  "description": "le serveur du projet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnaudgregoire/SWAG.git"
+  },
+  "keywords": [
+    "web",
+    "graphe"
+  ],
+  "author": "arnaud",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arnaudgregoire/SWAG/issues"
+  },
+  "homepage": "https://github.com/arnaudgregoire/SWAG#readme",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "node-zip": "^1.1.1",
+    "unzip": "^0.1.11"
+  }
+}
