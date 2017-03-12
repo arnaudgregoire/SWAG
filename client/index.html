@@ -1,58 +1,54 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="dist/jszip-utils.js"></script>
-        <script src="dist/jszip.js"></script>
-    <title></title>
-  </head>
-  <body>
-<script>
-var zip = new JSZip();
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta  name="Author" content="The AAA Team">
+	<meta name="Description" content="Outil de visualisation et analyse de fichier SHP - Utilisation de NetworkX pour réaliser des calculs de graphe">
+	<meta name="Keywords" content="graph,graphe,shapefile,shp,dbf,preview">
+	<!-- <link rel="shortcut icon" href="favicon.ico"> -->
+	<link rel="stylesheet" href="style.css" />
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->
 
-JSZipUtils.getBinaryContent('test.zip', function(err, data) {
-    if(err) {
-        throw err; // or handle err
-    }
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 
-    zip.loadAsync(data).then(function () {
-        generate_content()
-    });
-});
+	<script type="text/javascript" src="dist/jszip.min.js"></script>
+	<script type="text/javascript" src="dist/shp.min.js"></script>
+	<script type="text/javascript" src="dist/script.js"></script>
+	<title>Projet</title>
+</head>
 
-function generate_content(){
+<body>
+	<div id="shp_preview"></div>
 
-    zip.generateAsync({type:"uint8array"})
-    .then(function (content) {
-     create_form_data(content)
-    });
-}
+	<div id="button_wrap">
+		<label for="upload" id="upload_label">Upload ZIP file
+			<input id="upload_button" type="file" />
+		</label>
 
-function create_form_data(content) {
-    var fd = new FormData();
-    console.log(content);
-    fd.append('zip', content);
-    send_data(fd)
-}
+		<div class="popup">
+			<p>File must contain: .shp, .dbf (.prj optional)</p>
+		</div>
+	</div>
 
-function send_data(fd) {
-  console.log(zip);
-  $.ajax({
-      type: 'POST',
-      url: 'http://127.0.0.1:8080/',
-      data: fd,
-      processData: false,
-      contentType: false,
-      complete: function (data) {
-             if (data.readyState === 4 && data.status === 200) {
-                document.getElementById('test').innerHTML=data.responseText
-              }
-      }})
-}
+	<div id="file_wrap">
+		<p class=title>File:</p>
+		<div class="content"><p class="file_name">No file uploaded</p></div>
+	</div>
 
+	<div id="back_map">
+		<input type="checkbox" checked="checked" id="map_button"/>
+		<label for="map_button">Background Map</label>
+	</div>
 
-</script>
-  <div id='test'></div>
-  </body>
+	<div id="toolbox_wrap">
+		<p>Toolbox</p>
+		<div id=toolbox>
+		</div>
+	</div>
+
+	<div id="loadbar">
+	</div>
+
+</body>
 </html>
