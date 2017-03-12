@@ -3,20 +3,55 @@
   <head>
     <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="dist/jszip-utils.js"></script>
+        <script src="dist/jszip.js"></script>
     <title></title>
   </head>
   <body>
 <script>
-$.ajax({
-    type: 'GET',
-    url: 'http://127.0.0.1/projet-dev/serveur/serveur.php/',
-    crossDomain: true,
-    data : "send="+"lourd",
-    complete: function (data) {
-           if (data.readyState === 4 && data.status === 200) {
-              document.getElementById('test').innerHTML=data.responseText
-            }
-    }})
+var zip = new JSZip();
+
+JSZipUtils.getBinaryContent('emprise_1854.zip', function(err, data) {
+    if(err) {
+        throw err; // or handle err
+    }
+
+    zip.loadAsync(data).then(function () {
+        generate_content()
+    });
+});
+
+function generate_content(){
+
+    zip.generateAsync({type:"uint8array"})
+    .then(function (content) {
+     create_form_data(content)
+    });
+}
+
+function create_form_data(content) {
+    var fd = new FormData();
+    console.log(content);
+    fd.append('zip', content);
+    send_data(fd)
+}
+
+function send_data(fd) {
+  console.log(zip);
+  $.ajax({
+      type: 'POST',
+      url: 'http://127.0.0.1:8080/',
+      data: fd,
+      processData: false,
+      contentType: false,
+      complete: function (data) {
+             if (data.readyState === 4 && data.status === 200) {
+                document.getElementById('test').innerHTML=data.responseText
+              }
+      }})
+}
+
+
 </script>
   <div id='test'></div>
   </body>
