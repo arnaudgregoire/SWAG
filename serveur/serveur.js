@@ -17,10 +17,11 @@ const bodyParser    = require('body-parser')
 const multer        = require('multer')
 const saver         = require('file-saver')
 const JSZip         = require("jszip");
-const tou8          = require('buffer-to-uint8array');
+const tou8          = require('buffer-to-uint8array')
+const btoa          = require('btoa')
 
 function dezip() {
-    fs.createReadStream('emprise_1854.zip').pipe(unzip.Extract({ path: 'shp' }));
+    fs.createReadStream('zip/out.zip').pipe(unzip.Extract({ path: 'shp' }));
 }
 
 function python_call() {
@@ -44,13 +45,11 @@ var upload = multer( { limits: {
     storage : storage})
 
 app.post('/',upload.single('zip'), function (req, res, next) {
-  console.log('plop');
-  console.log(req.body);
-  console.log(typeof(req.body.zip));
-  var data = tou8(req.body.zip);
+  var data = convertBinaryStringToUint8Array(req.body.zip)
   console.log(data);
   console.log(typeof(data));
-  save(req.body.zip)
+  console.log(data.length);
+  save(data)
 })
 
 app.listen(8080);
@@ -59,16 +58,19 @@ console.log("Serveur ouvert à l'adresse http://127.0.0.1:8080/");
 
 function save(data) {
     var zip = new JSZip();
-    zip.loadAsync(data,{type : "uint8array"})
-    .then(function(zip) {
-    // you now have every files contained in the loaded zip
-    zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
-    .pipe(fs.createWriteStream('out.zip'))
-    .on('finish', function () {
-        // JSZip generates a readable stream with a "end" event,
-        // but is piped here in a writable stream which emits a "finish" event.
-        console.log("out.zip written.");
-    });
+    zip.loadAsync(data).then(function () {
+      zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
+      .pipe(fs.createWriteStream('zip/out.zip'))
+      .on('finish', function () {
+          console.log("out.zip written.");
+          dezip()
+      });
     });
 
+}
+function convertBinaryStringToUint8Array(str) {
+  var arr = str.split(",").map(function (val) {
+  return Number(val);
+  })
+  return new Uint8Array(arr)
 }

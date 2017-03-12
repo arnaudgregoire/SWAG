@@ -126,13 +126,15 @@ window.onload = function(){
   }
 
   function upload_zip(data){
+    console.log(data);
+    console.log(data.length);
     var form = new FormData();
     form.append('zip',data);
     form.append('option',123456);
     console.log(form);
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://127.0.0.1/edsa-swag/server.php", true);
+    xhr.open("POST", "http://127.0.0.1:8080/", true);
 
     // keep track of progression for progress bar
     xhr.onprogress = function(e){
@@ -149,7 +151,7 @@ window.onload = function(){
 
     xhr.send(form);
   }
-  
+
 
   function reset_file(){    // reset file
     map.removeLayer(map_vector);
