@@ -16,6 +16,8 @@ const unzip         = require('unzip2')
 const bodyParser    = require('body-parser')
 const multer        = require('multer')
 const saver         = require('file-saver')
+const JSZip         = require("jszip");
+const tou8          = require('buffer-to-uint8array');
 
 function dezip() {
     fs.createReadStream('emprise_1854.zip').pipe(unzip.Extract({ path: 'shp' }));
@@ -30,19 +32,6 @@ function python_call() {
   });
 }
 
-function str2bytes (str) {
-    var bytes = new Uint8Array(str.length);
-    for (var i=0; i<str.length; i++) {
-        bytes[i] = str.charCodeAt(i);
-    }
-    return bytes;
-}
-
-function save_zip(data, name){
-    var blob = new Blob([str2bytes(data)], {type: "application/zip"});
-    saver.saveAs(blob, name + ".zip");
-}
-
 var storage = multer.diskStorage({
   destination: "./zip/",
   filename:  "wow"
@@ -54,12 +43,32 @@ var upload = multer( { limits: {
   },
     storage : storage})
 
-app.post('/',upload.array('zip'), function (req, res, next) {
+app.post('/',upload.single('zip'), function (req, res, next) {
   console.log('plop');
   console.log(req.body);
-  fs.writeFileSync('lourd.zip',req.body );
+  console.log(typeof(req.body.zip));
+  var data = tou8(req.body.zip);
+  console.log(data);
+  console.log(typeof(data));
+  save(req.body.zip)
 })
 
 app.listen(8080);
 console.log("Serveur ouvert à l'adresse http://127.0.0.1:8080/");
 //dezip()
+
+function save(data) {
+    var zip = new JSZip();
+    zip.loadAsync(data,{type : "uint8array"})
+    .then(function(zip) {
+    // you now have every files contained in the loaded zip
+    zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
+    .pipe(fs.createWriteStream('out.zip'))
+    .on('finish', function () {
+        // JSZip generates a readable stream with a "end" event,
+        // but is piped here in a writable stream which emits a "finish" event.
+        console.log("out.zip written.");
+    });
+    });
+
+}

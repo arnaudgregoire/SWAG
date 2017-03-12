@@ -22,6 +22,7 @@
   "homepage": "https://github.com/arnaudgregoire/SWAG#readme",
   "dependencies": {
     "child_process": "^1.0.2",
+    "express": "^4.15.2",
     "node-zip": "^1.1.1",
     "unzip": "^0.1.11",
     "unzip2": "^0.2.5"
