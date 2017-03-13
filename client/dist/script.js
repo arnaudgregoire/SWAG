@@ -17,9 +17,11 @@ window.onload = function(){
   var file_name = document.getElementById("file_name");
   var map_button = document.getElementById("map_button");
 
-  /**
-  * Initialise les écouteurs d'évènements de la page
-  */
+/**
+* @function
+* @name init_listener
+* @description Initialise les écouteurs d'évènements de la page
+*/
   function init_listener(){
     busy = false;
     zip = new JSZip();
@@ -35,9 +37,9 @@ window.onload = function(){
     map_button.addEventListener("change", set_background, false);
   }
 
-  /**
-  * Initialise la carte Leaflet
-  */
+/**
+* Initialise la carte Leaflet
+*/
   function init_map(){
     map = L.map('shp_preview').setView([48.853, 2.345], 9);
     map_raster = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -48,9 +50,9 @@ window.onload = function(){
     set_background();
   }
 
-  /**
-  * Ajoute ou supprime la carte en fond de page
-  */
+/**
+* Ajoute ou supprime la carte en fond de page
+*/
   function set_background(){
     if(map_button.checked){
       map.addLayer(map_raster);
@@ -60,11 +62,11 @@ window.onload = function(){
     }
   }
 
-  /**
-  * Écouteur d'évènement associé au glisser & déposer d'un fichier
-  * @listens document.drop
-  * @param e {event} e - l'évènement déclenché par le glisser & déposer
-  */
+/**
+* Écouteur d'évènement associé au glisser & déposer d'un fichier
+* @listens document.drop
+* @param e {event} e - l'évènement déclenché par le glisser & déposer
+*/
   function document_drop(e){
     if(busy){ return; }
     e.preventDefault();
@@ -73,11 +75,11 @@ window.onload = function(){
     handle_file(file);
   }
 
-  /**
-  * Écouteur d'évènement associé au clique sur le bouton de chargement d'un fichier
-  * @listens upload_button.change
-  * @param {event} e - l'évènement déclenché par le chargement d'un fichier
-  */
+/**
+* Écouteur d'évènement associé au clique sur le bouton de chargement d'un fichier
+* @listens upload_button.change
+* @param {event} e - l'évènement déclenché par le chargement d'un fichier
+*/
   function document_select(e){
     if(busy){ return; }
 
@@ -85,10 +87,10 @@ window.onload = function(){
     handle_file(file);
   }
 
-  /**
-  * Vérifie le contenu du fichier ZIP, et supprime les fichiers supplémentaires
-  * @param {file} file - Le fichier chargé par l'utilisateur
-  */
+/**
+* Vérifie le contenu du fichier ZIP, et supprime les fichiers supplémentaires
+* @param {file} file - Le fichier chargé par l'utilisateur
+*/
   function handle_file(file){
     JSZip.loadAsync(file).then(function(zip){
       var type, idx, file_types = ['shp', 'dbf', 'prj'];
@@ -139,11 +141,11 @@ window.onload = function(){
     });
   }
 
-  /**
-  * Convertit le fichier SHP au format Geojson, et l'affiche sur la carte.
-  * Cette fonction utilise le module shapefile-js pour la conversion
-  * @param {ArrayBuffer} buffer - Le buffer de données correspondant au fichier SHP
-  */
+/**
+* Convertit le fichier SHP au format Geojson, et l'affiche sur la carte.
+* Cette fonction utilise le module shapefile-js pour la conversion
+* @param {ArrayBuffer} buffer - Le buffer de données correspondant au fichier SHP
+*/
   function display_zip(buffer){
     shp(buffer).then(function(geojson){
       if(map_vector){ map.removeLayer(map_vector) }
@@ -154,11 +156,11 @@ window.onload = function(){
     });
   }
 
-  /**
-  * Envoi le ZIP contenant le fichier SHP au serveur avec une requete AJAX.
-  * Le dossier ZIP est encapsulé dans un objet FormData pour être récupéré par le serveur.
-  * @param {UInt8Array} data - Le chaîne encodé correspondant aux données du dossier ZIP
-  */
+/**
+* Envoi le ZIP contenant le fichier SHP au serveur avec une requete AJAX.
+* Le dossier ZIP est encapsulé dans un objet FormData pour être récupéré par le serveur.
+* @param {UInt8Array} data - Le chaîne encodé correspondant aux données du dossier ZIP
+*/
   function upload_zip(data){
     // console.log(data);
     // console.log(data.length);
@@ -186,12 +188,12 @@ window.onload = function(){
     xhr.send(form);
   }
 
-  /**
-  * Réinitialise les éléments suivants sur la page Web:
-  * - la couche vecteur affiché sur la carte Leaflet
-  * - Le dossier ZIP enregistré dans une variable
-  * - Le texte indiquant le dossier ZIP chargé
-  */
+/**
+* Réinitialise les éléments suivants sur la page Web:
+* - la couche vecteur affiché sur la carte Leaflet
+* - Le dossier ZIP enregistré dans une variable
+* - Le texte indiquant le dossier ZIP chargé
+*/
   function reset_file(){
     map.removeLayer(map_vector);
     zip_file = undefined;
@@ -200,11 +202,11 @@ window.onload = function(){
     document.querySelector("#file_wrap .content").innerHTML = "<p class='file_name'>No file uploaded</p>";
   }
 
-  /**
-  Affiche un texte d'alerte au premier plan
-  * @param {String} text - Le texte à afficher à l'écran
-  * @param {Integer} timeout - La durée d'affichage de l'alerte
-  */
+/**
+Affiche un texte d'alerte au premier plan
+* @param {String} text - Le texte à afficher à l'écran
+* @param {Integer} timeout - La durée d'affichage de l'alerte
+*/
   function alert(text,timeout){
     var div = document.createElement("div");
     div.innerHTML = "<p>"+text+"</p>";
