@@ -77,7 +77,7 @@ function save(data) {
 /**
 * Transformation de chaine de caractère contenus dans le formdata en matrice Uint8array
 * @param str {str} - La chaine de caractère contenant les données du .zip
-* @return {Uint8Array} - Cette même chaîne de caractère en format Uint8array 
+* @return {Uint8Array} - Cette même chaîne de caractère en format Uint
 */
 function convertBinaryStringToUint8Array(str) {
   var arr = str.split(",").map(function (val) {
