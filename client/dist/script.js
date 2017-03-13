@@ -38,7 +38,9 @@ window.onload = function(){
   }
 
 /**
-* Initialise la carte Leaflet
+* @function
+* @name init_map
+* @description Initialise la carte Leaflet
 */
   function init_map(){
     map = L.map('shp_preview').setView([48.853, 2.345], 9);
@@ -51,7 +53,9 @@ window.onload = function(){
   }
 
 /**
-* Ajoute ou supprime la carte en fond de page
+* @function
+* @name set_background
+* @description Ajoute ou supprime la carte en fond de page
 */
   function set_background(){
     if(map_button.checked){
@@ -63,7 +67,9 @@ window.onload = function(){
   }
 
 /**
-* Écouteur d'évènement associé au glisser & déposer d'un fichier
+* @function
+* @name document_drop
+* @description Écouteur d'évènement associé au glisser & déposer d'un fichier
 * @listens document.drop
 * @param e {event} e - l'évènement déclenché par le glisser & déposer
 */
@@ -76,7 +82,9 @@ window.onload = function(){
   }
 
 /**
-* Écouteur d'évènement associé au clique sur le bouton de chargement d'un fichier
+* @function
+* @name document_select
+* @description Écouteur d'évènement associé au clique sur le bouton de chargement d'un fichier
 * @listens upload_button.change
 * @param {event} e - l'évènement déclenché par le chargement d'un fichier
 */
@@ -88,7 +96,9 @@ window.onload = function(){
   }
 
 /**
-* Vérifie le contenu du fichier ZIP, et supprime les fichiers supplémentaires
+* @function
+* @name handle_file
+* @description Vérifie le contenu du fichier ZIP, et supprime les fichiers supplémentaires
 * @param {file} file - Le fichier chargé par l'utilisateur
 */
   function handle_file(file){
@@ -142,8 +152,9 @@ window.onload = function(){
   }
 
 /**
-* Convertit le fichier SHP au format Geojson, et l'affiche sur la carte.
-* Cette fonction utilise le module shapefile-js pour la conversion
+* @function
+* @name display_zip
+* @description Convertit le fichier SHP au format Geojson, et l'affiche sur la carte. Cette fonction utilise le module shapefile-js pour la conversion
 * @param {ArrayBuffer} buffer - Le buffer de données correspondant au fichier SHP
 */
   function display_zip(buffer){
@@ -157,8 +168,9 @@ window.onload = function(){
   }
 
 /**
-* Envoi le ZIP contenant le fichier SHP au serveur avec une requete AJAX.
-* Le dossier ZIP est encapsulé dans un objet FormData pour être récupéré par le serveur.
+* @function
+* @name upload_zip
+* @description Envoi le ZIP contenant le fichier SHP au serveur avec une requete AJAX. Le dossier ZIP est encapsulé dans un objet FormData pour être récupéré par le serveur.
 * @param {UInt8Array} data - Le chaîne encodé correspondant aux données du dossier ZIP
 */
   function upload_zip(data){
@@ -189,7 +201,9 @@ window.onload = function(){
   }
 
 /**
-* Réinitialise les éléments suivants sur la page Web:
+* @function
+* @name reset_file
+* @description Réinitialise les éléments suivants sur la page Web:
 * - la couche vecteur affiché sur la carte Leaflet
 * - Le dossier ZIP enregistré dans une variable
 * - Le texte indiquant le dossier ZIP chargé
@@ -203,7 +217,9 @@ window.onload = function(){
   }
 
 /**
-Affiche un texte d'alerte au premier plan
+* @function
+* @name alert
+* @description Affiche un texte d'alerte au premier plan
 * @param {String} text - Le texte à afficher à l'écran
 * @param {Integer} timeout - La durée d'affichage de l'alerte
 */
