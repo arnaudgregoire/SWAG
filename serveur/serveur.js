@@ -13,12 +13,8 @@ const app           = express();
 const execFile      = require('child_process').execFile;
 const fs            = require('fs')
 const unzip         = require('unzip2')
-const bodyParser    = require('body-parser')
 const multer        = require('multer')
-const saver         = require('file-saver')
 const JSZip         = require("jszip");
-const tou8          = require('buffer-to-uint8array')
-const btoa          = require('btoa')
 
 function dezip() {
     fs.createReadStream('zip/out.zip').pipe(unzip.Extract({ path: 'shp' }));
