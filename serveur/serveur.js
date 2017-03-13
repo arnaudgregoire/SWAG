@@ -39,11 +39,6 @@ function python_call() {
   });
 }
 
-var storage = multer.diskStorage({
-  destination: "./zip/",
-  filename:  "wow"
-})
-
 var upload = multer( { limits:
   {
     fieldNameSize: 999999999,
@@ -62,6 +57,10 @@ app.listen(8080);
 console.log("Serveur ouvert à l'adresse http://127.0.0.1:8080/");
 //dezip()
 
+/**
+* Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
+* @param data {Uint8Array} - Le contenu du .zip transmis par le client
+*/
 function save(data) {
     var zip = new JSZip();
     zip.loadAsync(data).then(function () {
@@ -74,6 +73,12 @@ function save(data) {
     });
 
 }
+
+/**
+* Transformation de chaine de caractère contenus dans le formdata en matrice Uint8array
+* @param str {str} - La chaine de caractère contenant les données du .zip
+* @return {Uint8Array} - Cette même chaîne de caractère en format Uint8array 
+*/
 function convertBinaryStringToUint8Array(str) {
   var arr = str.split(",").map(function (val) {
   return Number(val);
