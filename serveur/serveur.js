@@ -47,9 +47,11 @@ var upload = multer( { limits:
 
 app.post('/',upload.single('zip'), function (req, res, next) {
   var data = convertBinaryStringToUint8Array(req.body.zip)
-  console.log(data);
   console.log(typeof(data));
   console.log(data.length);
+  console.log(req.body.name);
+  console.log(req.body.options);
+  console.log(req.body.operation);
   save(data)
 })
 
