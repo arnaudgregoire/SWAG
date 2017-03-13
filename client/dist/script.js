@@ -122,7 +122,7 @@ window.onload = function(){
         // affiche le nom à l'écran
         var div = document.querySelector("#file_wrap .content");
         div.innerHTML = "<div class='file_name'>\
-        <p class='name'>"+file.name.split(".")[0]+"</p>\
+        <p class='name'>"+shp_file.name.split(".")[0]+"</p>\
         <p class='close'>X</p>\
         </div>";
         document.getElementsByClassName("close")[0].addEventListener('click', reset_file);
@@ -178,7 +178,9 @@ window.onload = function(){
     // console.log(data.length);
     var form = new FormData();
     form.append('zip',data);
-    form.append('option',123456);
+    form.append('name',shp_file.name);
+    form.append('operation','basic');
+    form.append('options', '');
     // console.log(form);
 
     var xhr = new XMLHttpRequest();
@@ -204,9 +206,11 @@ window.onload = function(){
 * @function
 * @name reset_file
 * @description Réinitialise les éléments suivants sur la page Web:
-* - la couche vecteur affiché sur la carte Leaflet
-* - Le dossier ZIP enregistré dans une variable
-* - Le texte indiquant le dossier ZIP chargé
+* <ul>
+* <li>la couche vecteur affiché sur la carte Leaflet</li>
+* <li>Le dossier ZIP enregistré dans une variable</li>
+* <li>Le texte indiquant le dossier ZIP chargé</li>
+* </ul>
 */
   function reset_file(){
     map.removeLayer(map_vector);
