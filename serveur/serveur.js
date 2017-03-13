@@ -34,11 +34,11 @@ var storage = multer.diskStorage({
   filename:  "wow"
 })
 
-var upload = multer( { limits: {
+var upload = multer( { limits:
+  {
     fieldNameSize: 999999999,
     fieldSize: 999999999
-  },
-    storage : storage})
+  }})
 
 app.post('/',upload.single('zip'), function (req, res, next) {
   var data = convertBinaryStringToUint8Array(req.body.zip)
