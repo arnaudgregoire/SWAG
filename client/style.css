@@ -27,6 +27,7 @@ html, body{
   border: 1px solid rgba(0,0,0,0.3);
   transform: translate(-50%,0);
   -webkit-transform: translate(-50%,0);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
   z-index: 500;
 }
 
@@ -53,7 +54,6 @@ html, body{
   display: block;
 }
 
-
 #upload_button{
   position: absolute;
   top: 0;
@@ -72,6 +72,7 @@ html, body{
   min-width: 300px;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
   z-index: 500;
 }
 
@@ -121,6 +122,7 @@ html, body{
   padding: 5px;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
   z-index: 500;
 }
 
@@ -164,11 +166,13 @@ html, body{
   width: 400px;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
   overflow: hidden;
   z-index: 500;
 }
 
 #result_content{
+  max-height: 300px;
   transition: all 0.2s;
   -webkit-transition: all 0.2s;
 }
@@ -193,9 +197,10 @@ html, body{
   padding: 4px;
 }
 
-#result{
+#result p{
+  margin: 2px 0;
+  padding: 4px;
 }
-
 
 #toolbox_wrap{
   position: absolute;
@@ -218,6 +223,7 @@ html, body{
   background: #fff;
   color: #000;
   border: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
   text-align: center;
   text-transform: uppercase;
   font-size: 1.2em;
@@ -246,7 +252,7 @@ html, body{
   top: 0;
   right: 0;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: flex-start;
   width: 0;
@@ -254,6 +260,7 @@ html, body{
   margin: 0;
   background: #fff;
   opacity: 0;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
   transition: all 0.2s;
   -webkit-transition: all 0.2s;
   z-index: 0;
@@ -294,6 +301,7 @@ html, body{
 .drop_down:last-child{ margin-right: 0; }
 
 .drop_down>p{
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -307,6 +315,28 @@ html, body{
   cursor: default;
   transition: all 0.2s;
   -webkit-transition: all 0.2s;
+  z-index: 10;
+}
+.drop_down>p::after{
+  content: "";
+  position: absolute;
+  bottom: -16px;
+  right: calc(50% - 12px);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 8px 12px;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+}
+
+.drop_down:hover>p{
+  background: #3498db;
+  color: #fff;
+}
+.drop_down:hover>p::after{
+  border-top-color: #3498db;
 }
 
 .drop_down div{
@@ -319,11 +349,14 @@ html, body{
   justify-content: flex-start;
   align-items: center;
   width: 100%;
+  padding-top: 8px;
   background: #fff;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
   opacity: 0;
   overflow: hidden;
   transition: all 0.2s;
   -webkit-transition: all 0.2s;
+  z-index: 1;
 }
 .drop_down:hover div{
   visibility: visible;
