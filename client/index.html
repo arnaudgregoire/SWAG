@@ -7,7 +7,7 @@
 	<meta name="Keywords" content="graph,graphe,shapefile,shp,dbf,preview">
 	<!-- <link rel="shortcut icon" href="favicon.ico"> -->
 	<link rel="stylesheet" href="style.css" />
-	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
 	<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
@@ -32,7 +32,7 @@
 	</div>
 
 	<div id="file_wrap">
-		<p class=title>File:</p>
+		<p class=title>File</p>
 		<div class="content"><p class="file_name">No file uploaded</p></div>
 	</div>
 
@@ -83,7 +83,21 @@
 		</form>
 	</div>
 
-	<div id="loadbar">
+	<div id="result_wrap">
+		<p class=title>Result <i class="window fa fa-window-minimize"></i></p>
+		<div id="result_content">
+			<div id="basic_result">
+				<p>Nodes: 0</p>
+				<p>Edges: 0</p>
+			</div>
+
+			<div id="result">
+			</div>
+		</div>
+	</div>
+
+	<div id="loading">
+
 	</div>
 
 </body>
