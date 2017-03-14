@@ -26,12 +26,13 @@ const JSZip         = require("jszip");
 /**
  * Dezip le fichier out.zip contenu dans le dossier zip et écrit son contenu dans le dossier shp
  */
-function dezip() {
-    fs.createReadStream('zip/out.zip').pipe(unzip.Extract({ path: 'shp' }));
+function dezip(name) {
+    fs.createReadStream('zip/' + name + '.zip').pipe(unzip.Extract({ path: 'python/shp' }));
+    console.log("Extracted " + 'zip/' + name + '.zip' + " in folder python/shp.");
 }
 
-function python_call() {
-  const child = execFile('python', ['test.py','shp/bloub.txt'], (error, stdout, stderr) => {
+function python_call(name, operation) {
+  const child = execFile('python', ['swag.py','shp//' + name + '.shp', operation ], (error, stdout, stderr) => {
     if (error) {
       throw error;
     }
@@ -46,13 +47,16 @@ var upload = multer( { limits:
   }})
 
 app.post('/',upload.single('zip'), function (req, res, next) {
-  var data = convertBinaryStringToUint8Array(req.body.zip)
-  console.log(typeof(data));
-  console.log(data.length);
+  var data      = convertBinaryStringToUint8Array(req.body.zip)
+  var name      = req.body.name
+  var operation = req.body.operation
+
   console.log(req.body.name);
   console.log(req.body.options);
   console.log(req.body.operation);
-  save(data)
+  
+  save(data,name)
+  python_call(name, operation)
 })
 
 app.listen(8080);
@@ -63,14 +67,14 @@ console.log("Serveur ouvert à l'adresse http://127.0.0.1:8080/");
 * Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
 * @param data {Uint8Array} - Le contenu du .zip transmis par le client
 */
-function save(data) {
+function save(data,name) {
     var zip = new JSZip();
     zip.loadAsync(data).then(function () {
       zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
-      .pipe(fs.createWriteStream('zip/out.zip'))
+      .pipe(fs.createWriteStream('zip/' + name + '.zip'))
       .on('finish', function () {
-          console.log("out.zip written.");
-          dezip()
+          console.log('zip/' + name + '.zip' + " written.");
+          dezip(name)
       });
     });
 

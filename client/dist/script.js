@@ -178,8 +178,8 @@ window.onload = function(){
     // console.log(data.length);
     var form = new FormData();
     form.append('zip',data);
-    form.append('name',shp_file.name);
-    form.append('operation','basic');
+    form.append('name',shp_file.name.split(".")[0]);
+    form.append('operation','basics');
     form.append('options', '');
     // console.log(form);
 
