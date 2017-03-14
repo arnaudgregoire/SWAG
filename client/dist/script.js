@@ -8,6 +8,7 @@
 window.onload = function(){
   var zip_file, shp_file;
   var busy = true;
+  var basic_result, result;
 
   var map, map_raster, map_vector;
 
@@ -15,6 +16,8 @@ window.onload = function(){
   var file_name = document.getElementById("file_name");
   var map_button = document.getElementById("map_button");
   var button_list = document.getElementsByName("operation");
+  var window_action = document.getElementsByClassName("window")[0];
+  var DOM_result = document.getElementById("result");
 
 /**
 * @function
@@ -37,7 +40,7 @@ window.onload = function(){
     for(var i=0; i<button_list.length; i++){
       button_list[i].addEventListener("click", toolbox_listener, false);
     }
-
+    window_action.addEventListener("click", set_result_window, false);
   }
 
 /**
@@ -126,7 +129,7 @@ window.onload = function(){
         var div = document.querySelector("#file_wrap .content");
         div.innerHTML = "<div class='file_name'>\
         <p class='name'>"+shp_file.name.split(".")[0]+"</p>\
-        <p class='close'>X</p>\
+        <p class='close fa fa-times'></p>\
         </div>";
         document.getElementsByClassName("close")[0].addEventListener('click', reset_file);
 
@@ -198,7 +201,8 @@ window.onload = function(){
 
     xhr.onreadystatechange = function(){
       if(xhr.readyState == 4 && xhr.status == 200){
-        console.log(xhr.responseText);
+        var json = JSON.parse(xhr.responseText);
+        document.getElementById("basic_result").innerHTML = "<p>Nodes: "+json.basics.nb_nodes+"</p><p>Edges: "+json.basics.nb_edges+"</p>";
       }
     };
 
@@ -223,10 +227,149 @@ window.onload = function(){
     document.querySelector("#file_wrap .content").innerHTML = "<p class='file_name'>No file uploaded</p>";
   }
 
-
+/**
+* @function
+* @name toolbox_listener
+* @description Écouteur d'évènements des boutons radio de la boite à outil: réagis au clique souris, et envoie une requête AJAX
+* vers le serveur pour obtenir le résultat de l'opération demandé
+* @param {EventTarget} e - La cible du clique souris
+*/
   function toolbox_listener(e){
-    var radio = e.target;
-    console.log(radio.value);
+    if(shp_file == undefined){
+      alert("No file uploaded", 1500);
+      return;
+    }
+    var filename = shp_file.name.split(".")[0];
+    var operation = e.target.value;
+    var callback = handle_operation(operation);
+
+    var form = new FormData();
+    form.append('name', filename);
+    form.append('operation', operation);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://127.0.0.1:8080/", true);
+
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState == 4 && xhr.status == 200){
+        console.log(xhr.responseText);
+        var json = JSON.parse(xhr.responseText);
+        callback(json);
+      }
+    };
+
+    xhr.send(form);
+
+  }
+
+/**
+* @function
+* @name handle_operation
+* @description Définis la fonction de retour (callback) pour la requête AJAX associé au clique sur une opération. La fonction de retour prend comme
+* argument le JSON résultat de la requête
+* @param {String} operation - La valeur du bouton radio qui a été cliqué
+* @returns {Function}
+*/
+  function handle_operation(operation){
+    var f;
+    switch(operation){
+      case "diameter":
+        f = function(j){
+          DOM_result.innerHTML = "<p>Diameter: "+j.diameter+"</p>";
+        }
+        break;
+
+      case "radius":
+        f = function(j){
+          DOM_result.innerHTML = "<p>Radius: "+j.radius+"</p>";
+        }
+        break;
+
+      case "connect":
+        f = function(j){
+          DOM_result.innerHTML = "<p>Number of connected components: "+j.number_connected_components+"</p>";
+        }
+        break;
+
+      case "density":
+        f = function(j){
+          DOM_result.innerHTML = "<p>Density: "+j.density+"</p>";
+        }
+        break;
+
+      case "index1":
+        f = function(j){
+          DOM_result.innerHTML = "<p>Index &#960: "+j.pi+"</p>\
+                                  <p>Index &#951: "+j.eta+"</p>\
+                                  <p>Index &#952: "+j.theta+"</p>";
+        }
+        break;
+
+      case "cyclo":
+        f = function(j){
+          DOM_result.innerHTML = "<p>Cyclomatic complexity: "+j.cyclomatic+"</p>";
+        }
+        break;
+
+      case "index2":
+        f = function(j){
+          DOM_result.innerHTML = "<p>Index &#945: "+j.alpha+"</p>\
+                                  <p>Index &#946: "+j.beta+"</p>\
+                                  <p>Index &#967: "+j.gamma+"</p>";
+        }
+        break;
+
+      case "centrality":
+        f = function(j){
+
+        }
+        break;
+
+      case "scale_free":
+        f = function(j){
+
+        }
+        break;
+
+      case "cluster":
+        f = function(j){
+
+        }
+        break;
+
+      case "path":
+        f = function(j){
+
+        }
+        break;
+
+      case "rich_club":
+        f = function(j){
+
+        }
+        break;
+    }
+    return f;
+  }
+
+/**
+* @function
+* @name set_result_window
+* @description Affiche ou réduit la fenêtre de résultat sur l'interface Web
+*/
+  function set_result_window(){
+    if(window_action.classList.contains("fa-window-minimize")){
+      window_action.classList.remove("fa-window-minimize");
+      window_action.classList.add("fa-window-maximize");
+
+      document.getElementById("result_content").style.height = "0";
+    }
+    else{
+      window_action.classList.remove("fa-window-maximize");
+      window_action.classList.add("fa-window-minimize");
+
+      document.getElementById("result_content").style.height = "auto";
+    }
   }
 
 /**
