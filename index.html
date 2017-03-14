@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta  name="Author" content="The AAA Team">
+	<meta name="Description" content="Outil de visualisation et analyse de fichier SHP - Utilisation de NetworkX pour réaliser des calculs de graphe">
+	<meta name="Keywords" content="graph,graphe,shapefile,shp,dbf,preview">
+	<!-- <link rel="shortcut icon" href="favicon.ico"> -->
+	<link rel="stylesheet" href="style.css" />
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+	<script type="text/javascript" src="dist/jszip.min.js"></script>
+	<script type="text/javascript" src="dist/shp.min.js"></script>
+	<script type="text/javascript" src="dist/script.js"></script>
+	<title>Projet</title>
+</head>
+
+<body>
+	<div id="shp_preview"></div>
+
+	<div id="button_wrap">
+		<label for="upload" id="upload_label">Upload ZIP file
+			<input id="upload_button" type="file" />
+		</label>
+
+		<div class="popup">
+			<p>File must contain: .shp, .dbf, .shx (.prj optional)</p>
+		</div>
+	</div>
+
+	<div id="file_wrap">
+		<p class=title>File:</p>
+		<div class="content"><p class="file_name">No file uploaded</p></div>
+	</div>
+
+	<div id="back_map">
+		<input type="checkbox" checked="checked" id="map_button"/>
+		<label for="map_button">Background Map</label>
+	</div>
+
+	<div id="toolbox_wrap">
+		<input type="checkbox" id="toolbox_checkbox"><label for="toolbox_checkbox">Toolbox</label>
+		<form id=toolbox>
+			<div class="drop_down">
+				<p>Size</p>
+				<div>
+					<input type='radio' name='operation' value='diameter' id='diameter'><label for='diameter'>Diameter</label>
+					<input type='radio' name='operation' value='radius' id='radius'><label for='radius'>Radius</label>
+					<input type='radio' name='operation' value='connect' id='connect'><label for='connect'>Connected Component</label>
+				</div>
+			</div>
+
+			<div class="drop_down">
+				<p>Organization</p>
+				<div>
+					<input type='radio' name='operation' value='density' id='density'><label for='density'>Density</label>
+					<input type='radio' name='operation' value='index1' id='index1'><label for='index1'>Index &#960,&#951, &#952</label>
+				</div>
+			</div>
+
+			<div class="drop_down">
+				<p>Graph Theory</p>
+				<div>
+					<input type='radio' name='operation' value='cyclo' id='cyclo'><label for='cyclo'>Cyclomatic</label>
+					<input type='radio' name='operation' value='index2' id='index2'><label for='index2'>Index &#945,&#946,&#947</label>
+					<input type='radio' name='operation' value='centrality' id='centrality'><label for='centrality'>Centrality</label>
+				</div>
+			</div>
+
+			<div class="drop_down">
+				<p>Structure</p>
+				<div>
+					<input type='radio' name='operation' value='scale_free' id='scale_free'><label for='scale_free'>Scale-Free</label>
+					<input type='radio' name='operation' value='cluster' id='cluster'><label for='cluster'>Clustering Coef.</label>
+					<input type='radio' name='operation' value='path' id='path'><label for='path'>Shortest Path</label>
+					<input type='radio' name='operation' value='rich_club' id='rich_club'><label for='rich_club'>Rich-Club Coef.</label>
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+	<div id="loadbar">
+	</div>
+
+</body>
+</html>
