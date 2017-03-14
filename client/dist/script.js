@@ -6,16 +6,15 @@
 * @requires shapefile-js {@link https://github.com/calvinmetcalf/shapefile-js}
 */
 window.onload = function(){
-  var  zip_file, shp_file;
+  var zip_file, shp_file;
   var busy = true;
 
   var map, map_raster, map_vector;
 
-  var file_types = ['shp', 'shx', 'dbf', '.prj'];
-
   var upload_button = document.getElementById("upload_button");
   var file_name = document.getElementById("file_name");
   var map_button = document.getElementById("map_button");
+  var button_list = document.getElementsByName("operation");
 
 /**
 * @function
@@ -35,6 +34,10 @@ window.onload = function(){
 
     upload_button.addEventListener('change', document_select, false);
     map_button.addEventListener("change", set_background, false);
+    for(var i=0; i<button_list.length; i++){
+      button_list[i].addEventListener("click", toolbox_listener, false);
+    }
+
   }
 
 /**
@@ -103,7 +106,7 @@ window.onload = function(){
 */
   function handle_file(file){
     JSZip.loadAsync(file).then(function(zip){
-      var type, idx, file_types = ['shp', 'dbf', 'prj'];
+      var type, idx, file_types = ['shp', 'dbf', 'shx', 'prj'];
 
       // parcours le ZIP pour vérifier chaque fichier
       zip.forEach(function(relativePath, zipEntry) {
@@ -218,6 +221,12 @@ window.onload = function(){
     shp_file = undefined;
     upload_button.value = "";
     document.querySelector("#file_wrap .content").innerHTML = "<p class='file_name'>No file uploaded</p>";
+  }
+
+
+  function toolbox_listener(e){
+    var radio = e.target;
+    console.log(radio.value);
   }
 
 /**
