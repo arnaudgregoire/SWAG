@@ -362,13 +362,13 @@ window.onload = function(){
       window_action.classList.remove("fa-window-minimize");
       window_action.classList.add("fa-window-maximize");
 
-      document.getElementById("result_content").style.height = "0";
+      document.getElementById("result_content").style.maxHeight = "0";
     }
     else{
       window_action.classList.remove("fa-window-maximize");
       window_action.classList.add("fa-window-minimize");
 
-      document.getElementById("result_content").style.height = "auto";
+      document.getElementById("result_content").style.maxHeight = "300px";
     }
   }
 
