@@ -22,7 +22,7 @@ const fs            = require('fs')
 const unzip         = require('unzip2')
 const multer        = require('multer')
 const JSZip         = require("jszip");
-
+var   result_json   = ''
 /**
  * Dezip le fichier out.zip contenu dans le dossier zip et écrit son contenu dans le dossier shp
  */
@@ -34,10 +34,11 @@ function dezip(name) {
 function python_call(name, operation) {
   const child = execFile('python', ['python/swag.py','python//shp//' + name + '.shp', operation ], (error, stdout, stderr) => {
     if (error) {
-      console.log(stdout);
       throw error;
     }
     console.log(stdout);
+    console.log(typeof(stdout));
+    result_json = stdout
   });
 }
 
@@ -58,6 +59,9 @@ app.post('/',upload.single('zip'), function (req, res, next) {
 
   save(data,name)
   python_call(name, operation)
+  console.log(result_json);
+  res.write(result_json)
+  res.end()
 })
 
 app.listen(8080);

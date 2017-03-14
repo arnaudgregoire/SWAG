@@ -17,7 +17,6 @@ def main(shapefile, nomMethode):
     Les attributs sont :
         - basics
     """
-    print(sys.argv)
 
     # Transformation du shapefile en graphe
     G = nx.read_shp(shapefile)
@@ -54,12 +53,12 @@ def fun_basics(G) :
 
     # Nombres de sommets
     nb_nodes = nx.number_of_nodes(G)
-    print("nb_nodes", nb_nodes)
     # Nombres d'arcs
     nb_edges = nx.number_of_edges(G)
 
     s = '{"basics":{"nb_nodes" : ' + str(nb_nodes) + ', "nb_edges" : ' + str(nb_edges) + '}}'
     print(s)
+    sys.exit()
 
 def fun_diameter(G) :
 
