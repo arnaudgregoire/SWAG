@@ -32,8 +32,9 @@ function dezip(name) {
 }
 
 function python_call(name, operation) {
-  const child = execFile('python', ['swag.py','shp//' + name + '.shp', operation ], (error, stdout, stderr) => {
+  const child = execFile('python', ['python/swag.py','python//shp//' + name + '.shp', operation ], (error, stdout, stderr) => {
     if (error) {
+      console.log(stdout);
       throw error;
     }
     console.log(stdout);
@@ -54,7 +55,7 @@ app.post('/',upload.single('zip'), function (req, res, next) {
   console.log(req.body.name);
   console.log(req.body.options);
   console.log(req.body.operation);
-  
+
   save(data,name)
   python_call(name, operation)
 })

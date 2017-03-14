@@ -1,11 +1,9 @@
 import numpy as np
-import skimage
 import matplotlib
-import scipy
 import networkx as nx
 import sys
 
-print(sys.argv)
+
 
 shapefile = sys.argv[1]
 #shapefile = "donnees//1854_emprise.shp"
@@ -19,6 +17,7 @@ def main(shapefile, nomMethode):
     Les attributs sont :
         - basics
     """
+    print(sys.argv)
 
     # Transformation du shapefile en graphe
     G = nx.read_shp(shapefile)
