@@ -22,7 +22,6 @@ const fs            = require('fs')
 const unzip         = require('unzip2')
 const multer        = require('multer')
 const JSZip         = require("jszip");
-var   result_json   = ''
 /**
  * Dezip le fichier out.zip contenu dans le dossier zip et écrit son contenu dans le dossier shp
  */
@@ -31,16 +30,7 @@ function dezip(name) {
     console.log("Extracted " + 'zip/' + name + '.zip' + " in folder python/shp.");
 }
 
-function python_call(name, operation) {
-  const child = execFile('python', ['python/swag.py','python//shp//' + name + '.shp', operation ], (error, stdout, stderr) => {
-    if (error) {
-      throw error;
-    }
-    console.log(stdout);
-    console.log(typeof(stdout));
-    result_json = stdout
-  });
-}
+
 
 var upload = multer( { limits:
   {
@@ -57,33 +47,46 @@ app.post('/',upload.single('zip'), function (req, res, next) {
   console.log(req.body.options);
   console.log(req.body.operation);
 
-  save(data,name)
-  python_call(name, operation)
-  console.log(result_json);
-  res.write(result_json)
-  res.end()
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  function python_call(name, operation) {
+    var result_json = ""
+    console.log('python ' + ' python/swag.py ' + ' python//shp//' + name + '.shp' + " " + operation );
+    const child = execFile('python', ['python/swag.py','python//shp//' + name + '.shp', operation ], (error, stdout, stderr) => {
+      if (error) {
+        throw error;
+      }
+      var result_json = stdout
+      console.log(result_json);
+      res.send(result_json)
+      console.log("envoi des données au client");
+    });
+  }
+  /**
+  * Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
+  * @param data {Uint8Array} - Le contenu du .zip transmis par le client
+  */
+  function save(data,name,operation) {
+      var zip = new JSZip();
+      zip.loadAsync(data).then(function () {
+        zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
+        .pipe(fs.createWriteStream('zip/' + name + '.zip'))
+        .on('finish', function () {
+            console.log('zip/' + name + '.zip' + " written.");
+            dezip(name)
+            python_call(name, operation)
+        });
+      });
+
+  }
+  save(data,name,operation)
 })
 
 app.listen(8080);
 console.log("Serveur ouvert à l'adresse http://127.0.0.1:8080/");
 //dezip()
 
-/**
-* Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
-* @param data {Uint8Array} - Le contenu du .zip transmis par le client
-*/
-function save(data,name) {
-    var zip = new JSZip();
-    zip.loadAsync(data).then(function () {
-      zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
-      .pipe(fs.createWriteStream('zip/' + name + '.zip'))
-      .on('finish', function () {
-          console.log('zip/' + name + '.zip' + " written.");
-          dezip(name)
-      });
-    });
 
-}
 
 /**
 * Transformation de chaine de caractère contenus dans le formdata en matrice Uint8array
