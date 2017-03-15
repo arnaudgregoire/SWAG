@@ -39,12 +39,10 @@ var upload = multer( { limits:
   }})
 
 app.post('/',upload.single('zip'), function (req, res, next) {
-  var data      = convertBinaryStringToUint8Array(req.body.zip)
+  var data      = ''
   var name      = req.body.name
   var operation = req.body.operation
 
-  console.log(req.body.name);
-  console.log(req.body.options);
   console.log(req.body.operation);
 
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -77,9 +75,14 @@ app.post('/',upload.single('zip'), function (req, res, next) {
             python_call(name, operation)
         });
       });
-
   }
-  save(data,name,operation)
+  if (typeof(req.body.zip) !== 'undefined'){
+      data = convertBinaryStringToUint8Array(req.body.zip)
+      save(data,name,operation)
+  }
+  else {
+    python_call(name,operation)
+  }
 })
 
 app.listen(8080);

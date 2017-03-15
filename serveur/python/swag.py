@@ -58,7 +58,6 @@ def fun_basics(G) :
 
     s = '{"basics":{"nb_nodes" : ' + str(nb_nodes) + ', "nb_edges" : ' + str(nb_edges) + '}}'
     print(s)
-    sys.exit()
 
 def fun_diameter(G) :
 
