@@ -47,6 +47,15 @@ app.post('/',upload.single('zip'), function (req, res, next) {
 
   res.setHeader('Access-Control-Allow-Origin', '*');
 
+  /**
+  * @function
+  * @name python_call
+  * @description Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
+  * @param data {Uint8Array} - Le contenu du .zip transmis par le client
+  * @param name {name} - le nom du zip/fichier envoyé par le client
+  * @param operation {string} - Le nom de l'opération demandé par le client
+  */
+
   function python_call(name, operation) {
     var result_json = ""
     console.log('python ' + ' python/swag.py ' + ' python//shp//' + name + '.shp' + " " + operation );
@@ -60,10 +69,16 @@ app.post('/',upload.single('zip'), function (req, res, next) {
       console.log("envoi des données au client");
     });
   }
-  /**
-  * Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
-  * @param data {Uint8Array} - Le contenu du .zip transmis par le client
-  */
+
+/**
+* @function
+* @name save
+* @description Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
+* @param data {Uint8Array} - Le contenu du .zip transmis par le client
+* @param name {name} - le nom du zip/fichier envoyé par le client
+* @param operation {string} - Le nom de l'opération demandé par le client
+*/
+
   function save(data,name,operation) {
       var zip = new JSZip();
       zip.loadAsync(data).then(function () {
@@ -76,6 +91,9 @@ app.post('/',upload.single('zip'), function (req, res, next) {
         });
       });
   }
+
+
+
   if (typeof(req.body.zip) !== 'undefined'){
       data = convertBinaryStringToUint8Array(req.body.zip)
       save(data,name,operation)
