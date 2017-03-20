@@ -13,7 +13,7 @@ relevant d’importants enjeux :
 - simulation
 - études historiques       
 
-###Contexte
+### Contexte
 Il existe peu d’outils permettant
 cette analyse, et à notre connaissance, aucune plateforme web.
 L’objectif est de mettre en place un site web permettant à un
