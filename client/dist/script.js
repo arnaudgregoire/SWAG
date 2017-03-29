@@ -311,7 +311,7 @@ window.onload = function(){
         }
         break;
 
-      case "connect":
+      case "number_connected_component":
         f = function(j){
           DOM_result.innerHTML = "<p>Number of connected components: "+j.number_connected_components+"</p>";
         }
@@ -323,7 +323,7 @@ window.onload = function(){
         }
         break;
 
-      case "index1":
+      case "index_pi_eta_theta":
         f = function(j){
           DOM_result.innerHTML = "<p>Index &#960: "+j.pi+"</p>\
                                   <p>Index &#951: "+j.eta+"</p>\
@@ -337,7 +337,7 @@ window.onload = function(){
         }
         break;
 
-      case "index2":
+      case "index_alpha_beta_gamma":
         f = function(j){
           DOM_result.innerHTML = "<p>Index &#945: "+j.alpha+"</p>\
                                   <p>Index &#946: "+j.beta+"</p>\
@@ -363,7 +363,7 @@ window.onload = function(){
         }
         break;
 
-      case "path":
+      case "average_shortest_path_length":
         f = function(j){
 
         }
