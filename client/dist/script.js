@@ -18,6 +18,7 @@ window.onload = function(){
   var button_list = document.getElementsByName("operation");
   var window_action = document.getElementsByClassName("window")[0];
   var DOM_result = document.getElementById("result");
+  var loader = document.getElementById("loader");
 
 /**
 * @function
@@ -25,7 +26,6 @@ window.onload = function(){
 * @description Initialise les écouteurs d'évènements de la page
 */
   function init_listener(){
-    busy = false;
     zip = new JSZip();
     console.log("JSZip support:");
     console.log(JSZip.support);
@@ -41,6 +41,7 @@ window.onload = function(){
       button_list[i].addEventListener("click", toolbox_listener, false);
     }
     window_action.addEventListener("click", set_result_window, false);
+    busy = false;
   }
 
 /**
@@ -84,7 +85,13 @@ window.onload = function(){
     e.preventDefault();
 
     var file = e.dataTransfer.files[0];
-    handle_file(file);
+    var file_name = file.name.split(".").pop();
+    if(file_name == "zip"){
+      handle_file(file);
+    }
+    else{
+      alert("ZIP file only", 1500);
+    }
   }
 
 /**
@@ -108,6 +115,8 @@ window.onload = function(){
 * @param {file} file - Le fichier chargé par l'utilisateur
 */
   function handle_file(file){
+    busy = true;
+    loader.style.display = "block";
     JSZip.loadAsync(file).then(function(zip){
       var type, idx, file_types = ['shp', 'dbf', 'shx', 'prj'];
 
@@ -151,6 +160,8 @@ window.onload = function(){
 
       }
       else{
+        busy = false;
+        loader.style.display = "none";
         var str = "Zip file incorrect. Missing: "+file_types.toString();
         alert(str,2500);
       }
@@ -170,6 +181,9 @@ window.onload = function(){
 
       map.addLayer(map_vector);
       map.fitBounds(map_vector.getBounds());
+
+      if(busy){ busy = false; }
+      else{ loader.style.display = "none"; }
     });
   }
 
@@ -203,6 +217,9 @@ window.onload = function(){
       if(xhr.readyState == 4 && xhr.status == 200){
         var json = JSON.parse(xhr.responseText);
         document.getElementById("basic_result").innerHTML = "<p>Nodes: "+json.basics.nb_nodes+"</p><p>Edges: "+json.basics.nb_edges+"</p>";
+
+        if(busy){ busy = false; }
+        else{ loader.style.display = "none"; }
       }
     };
 
@@ -379,7 +396,7 @@ window.onload = function(){
 * @param {String} text - Le texte à afficher à l'écran
 * @param {Integer} timeout - La durée d'affichage de l'alerte
 */
-  function alert(text,timeout){
+  function alert(text,timeout=1500){
     var div = document.createElement("div");
     div.innerHTML = "<p>"+text+"</p>";
     div.classList.add("alert");
