@@ -153,6 +153,7 @@ window.onload = function(){
         // Lecture du ZIP au format UInt8Array pour l'envoi sur le serveur Node
         zip_file.generateAsync({type:"uint8array"})
         .then(function success(content) {
+          busy = false;
           upload_zip(content);
         }, function error(e) {
           throw e;
@@ -181,9 +182,6 @@ window.onload = function(){
 
       map.addLayer(map_vector);
       map.fitBounds(map_vector.getBounds());
-
-      if(busy){ busy = false; }
-      else{ loader.style.display = "none"; }
     });
   }
 
@@ -194,6 +192,9 @@ window.onload = function(){
 * @param {UInt8Array} data - Le chaîne encodé correspondant aux données du dossier ZIP
 */
   function upload_zip(data){
+    if(busy){ return; }
+    busy = true;
+    loader.style.display = "block";
     // console.log(data);
     // console.log(data.length);
     var form = new FormData();
@@ -218,8 +219,8 @@ window.onload = function(){
         var json = JSON.parse(xhr.responseText);
         document.getElementById("basic_result").innerHTML = "<p>Nodes: "+json.basics.nb_nodes+"</p><p>Edges: "+json.basics.nb_edges+"</p>";
 
-        if(busy){ busy = false; }
-        else{ loader.style.display = "none"; }
+        busy = false;
+        loader.style.display = "none";
       }
     };
 
@@ -242,6 +243,7 @@ window.onload = function(){
     shp_file = undefined;
     upload_button.value = "";
     document.querySelector("#file_wrap .content").innerHTML = "<p class='file_name'>No file uploaded</p>";
+    document.getElementById("result").innerHTML = "";
   }
 
 /**
@@ -256,6 +258,11 @@ window.onload = function(){
       alert("No file uploaded", 1500);
       return;
     }
+
+    if(busy){ return; }
+    busy = true;
+    loader.style.display = "block";
+
     var filename = shp_file.name.split(".")[0];
     var operation = e.target.value;
     var callback = handle_operation(operation);
@@ -269,14 +276,16 @@ window.onload = function(){
 
     xhr.onreadystatechange = function(){
       if(xhr.readyState == 4 && xhr.status == 200){
-        console.log(xhr.responseText);
+        // console.log(xhr.responseText);
         var json = JSON.parse(xhr.responseText);
         callback(json);
+
+        busy = false;
+        loader.style.display = "none";
       }
     };
 
     xhr.send(form);
-
   }
 
 /**
