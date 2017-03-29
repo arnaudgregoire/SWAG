@@ -110,8 +110,10 @@ def fun_basics(G) :
 
     # Nombres de sommets
     nb_nodes = nx.number_of_nodes(G)
+    
     # Nombres d'arcs
     nb_edges = nx.number_of_edges(G)
+    
     # Longueur totale (somme des longueurs des arcs)
     total_length = 0
     list_edges = G.edges(data=True)
@@ -145,8 +147,6 @@ def fun_number_connected_component(G) :
     s = '{"number_connected_components" : ' + str(number_connected_components) + '}'
     print(s)
 
-    
-    
 
 # Trafic total (somme des trafics/poids des arcs)
 
@@ -157,6 +157,7 @@ def fun_number_connected_component(G) :
 
 
 # Indice de détour (Longueur du graphe rapportée à la longueur du réseau)
+
 def fun_density(G) :
 
     # Densité (Longueur du graphe rapporté à la surface de l'espace étudié)
@@ -165,11 +166,24 @@ def fun_density(G) :
     print(s)
 
 def fun_index_pi_eta_theta(G) :
-    pass
-    # Indice "pi" (Longueur du graphe rapportée à la longueur du diamètre)
-    # Indice "eta" (Longueur du graphe rapportée au nombre d'arcs)
-    # Indice "theta" (Traffic total rapporté au nombre de sommets)
     
+    # Indice "pi" (Longueur du graphe rapportée à la longueur du diamètre)
+    pi = 0
+    
+    # Indice "eta" (Longueur du graphe rapportée au nombre d'arcs)
+    total_length = 0
+    nb_edges = 0
+    list_edges = G.edges(data=True)
+    for edge in list_edges:
+        total_length += edge[-1]["LENGTH"]
+        nb_edges += 1
+    eta = total_length / nb_edges
+    
+    # Indice "theta" (Traffic total rapporté au nombre de sommets)
+    theta = 0
+    
+    s = '{"index_pi_eta_theta":{"pi" : ' + str(pi) + ', "eta" : ' + str(eta) + ', "theta" : ' + str(theta) + '}}'
+    print(s)
     
 #/////////////////////////////////////////////////////////////////////
 # Mesures de la structure (Théorie des Graphes)
@@ -178,11 +192,18 @@ def fun_index_pi_eta_theta(G) :
 
 # Nombre cyclomatique (nombre maximum de cycles indépendants)
 def fun_index_alpha_beta_gamma(G) :
-    pass
-    # Indice alpha (nombre de cycles sur nombres maximums de cycle possible)
-    # Indice beta (nombre d'arcs sur nombre de sommets)
-    # Indice gamma (nombre d'arcs sur nombre maximum d'arcs possible)
     
+    # Indice alpha (nombre de cycles sur nombres maximums de cycle possible)
+    alpha = len(nx.simple_cycles(G)) / len(nx.simple_cycles(nx.complete_graph(nx.number_of_nodes)))
+    
+    # Indice beta (nombre d'arcs sur nombre de sommets)
+    beta = nx.number_of_edges(G) / nx.number_of_nodes(G)
+    
+    # Indice gamma (nombre d'arcs sur nombre maximum d'arcs possible)
+    gamma = nx.number_of_edges(G) / (nx.number_of_nodes(G) - 2) * 3
+    
+    s = '{"index_alpha_beta_gamma":{"alpha" : ' + str(alpha) + ', "beta" : ' + str(beta) + ', "gamma" : ' + str(gamma) + '}}'
+    print(s)
     
     
 # Centralité (Somme des centralités individuelles des noeuds)
@@ -196,7 +217,7 @@ def fun_index_alpha_beta_gamma(G) :
 # Indice de hiérarchie (Scale-free)
 # Transitivité (Clustering coefficient)
 # Transitivité (average clustering coefficient)
-# Longueur moyenne des plus courts chemin
+
 def fun_average_shortest_path_length(G,weight=None) :
     # Longueur moyenne des plus courts chemin
     average_shortest_path_length = nx.average_shortest_path_length(G,weight)
