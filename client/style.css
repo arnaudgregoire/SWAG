@@ -76,21 +76,54 @@ html, body{
   z-index: 500;
 }
 
-.file_name{
+.no_file{
   position: relative;
-  padding: 5px;
+  padding: 6px;
   margin: 0;
   background: #fff;
   color: #000;
   font-size: 1.1em;
 }
 
-.file_name .name{
+.file_name{
+  position: relative;
+  padding: 6px;
+  background: #fff;
+  color: #000;
+}
+
+.file_name input{
+  display: none;
+}
+.file_name label{
+  padding: 0 30px;
+  font-size: 1.1em;
+}
+
+.file_name label::before{
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
   margin: 0;
   padding: 0;
-  color: #000;
-  font-size: 1em;
+  background: #fff;
+  border: 2px solid rgba(0,0,0,0.5);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transition: all 0.1s;
+  -webkit-transition: all 0.1s;
 }
+.file_name label:hover::before{
+  background: #ccc;
+}
+.file_name input:checked + label::before{
+  background: #3498db;
+}
+
 .file_name .close{
   position: absolute;
   right: 10px;
@@ -107,7 +140,6 @@ html, body{
   transition: all 0.25s;
   -webkit-transition: all 0.25s;
 }
-
 .file_name:hover .close{
   opacity: 1;
 }
@@ -217,10 +249,10 @@ html, body{
   position: absolute;
   top: 0;
   right: 0;
+  padding: 10px;
   margin: 0;
   height: 25px;
   width: 105px;
-  padding: 10px;
   background: #fff;
   color: #000;
   border: 1px solid rgba(0,0,0,0.3);
@@ -270,7 +302,7 @@ html, body{
 #toolbox input[type="radio"]{ display: none; }
 #toolbox input[type="radio"] + label{
 	position: relative;
-  margin: 5px 0;
+  /*margin: 5px 0;*/
 	padding: 5px 7px;
   width: 100%;
   color: #000;
@@ -419,6 +451,7 @@ html, body{
 .content{
   margin: 0;
   padding: 0;
+  height: auto;
 }
 
 .popup{
