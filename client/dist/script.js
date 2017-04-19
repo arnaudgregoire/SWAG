@@ -50,74 +50,48 @@ Graph.prototype.checkValues = function(operation){
       else{ return false; }
 
     case "radius":
-      f = function(j){
-        DOM_result.innerHTML = "<p>Radius: "+j.radius+"</p>";
-      }
-      break;
+      if(this.radius){ return true; }
+      else{ return false; }
 
     case "number_connected_component":
-      f = function(j){
-        DOM_result.innerHTML = "<p>Number of connected components: "+j.number_connected_components+"</p>";
-      }
-      break;
+      if(this.nb_connected_components){ return true; }
+      else{ return false; }
 
     case "density":
-      f = function(j){
-        DOM_result.innerHTML = "<p>Density: "+j.density+"</p>";
-      }
-      break;
+      if(this.density){ return true; }
+      else{ return false; }
 
     case "index_pi_eta_theta":
-      f = function(j){
-        DOM_result.innerHTML = "<p>Index &#960: "+j.pi+"</p>\
-                                <p>Index &#951: "+j.eta+"</p>\
-                                <p>Index &#952: "+j.theta+"</p>";
-      }
-      break;
+      if(this.pi && this.eta && this.theta){ return true; }
+      else{ return false; }
 
     case "cyclo":
-      f = function(j){
-        DOM_result.innerHTML = "<p>Cyclomatic complexity: "+j.cyclomatic+"</p>";
-      }
-      break;
+      if(this.cyclomatic){ return true; }
+      else{ return false; }
 
     case "index_alpha_beta_gamma":
-      f = function(j){
-        DOM_result.innerHTML = "<p>Index &#945: "+j.alpha+"</p>\
-                                <p>Index &#946: "+j.beta+"</p>\
-                                <p>Index &#967: "+j.gamma+"</p>";
-      }
-      break;
+      if(this.alpha && this.beta && this.gamma){ return true; }
+      else{ return false; }
 
     case "centrality":
-      f = function(j){
-
-      }
-      break;
+      if(this.centrality){ return true; }
+      else{ return false; }
 
     case "scale_free":
-      f = function(j){
-
-      }
-      break;
+      if(this.scale_free){ return true; }
+      else{ return false; }
 
     case "cluster":
-      f = function(j){
-
-      }
-      break;
+      if(this.cluster_coef){ return true; }
+      else{ return false; }
 
     case "average_shortest_path_length":
-      f = function(j){
-
-      }
-      break;
+      if(this.shortest_path){ return true; }
+      else{ return false; }
 
     case "rich_club":
-      f = function(j){
-
-      }
-      break;
+      if(this.rich_club_coef){ return true; }
+      else{ return false; }
   }
 }
 
@@ -214,7 +188,7 @@ window.onload = function(){
 * @param {event} e - l'évènement déclenché par le chargement d'un fichier
 */
   function document_select(e){
-    if(busy){ return; }
+    if(busy){ console.log("busy");return; }
 
     var file = DOM_upload_button.files[0];
     DOM_upload_button.value = "";
@@ -272,7 +246,7 @@ window.onload = function(){
         .then(function success(content) {
           graph.zip_uint8array = content;
           busy = false;
-          upload_zip(graph);
+          upload_graph(graph);
         }, function error(e) {
           throw e;
         });
@@ -290,12 +264,12 @@ window.onload = function(){
 
 /**
 * @function
-* @name display_zip
+* @name display_graph
 * @description Convertit le fichier SHP au format Geojson, et l'affiche sur la carte. Cette fonction utilise le module shapefile-js pour la conversion
 * @param {ArrayBuffer} buffer - Le buffer de données correspondant au fichier SHP
 */
-  function display_zip(buffer){
-    shp(buffer).then(function(geojson){
+  function display_graph(graph){
+    shp(graph.zip_array_buffer).then(function(geojson){
       map.eachLayer(function(layer) {
         if(layer != map_raster){ map.removeLayer(layer); }
       });
@@ -308,11 +282,11 @@ window.onload = function(){
 
 /**
 * @function
-* @name upload_zip
+* @name upload_graph
 * @description Envoi le ZIP contenant le fichier SHP au serveur avec une requete AJAX. Le dossier ZIP est encapsulé dans un objet FormData pour être récupéré par le serveur.
 * @param {UInt8Array} data - Le chaîne encodé correspondant aux données du dossier ZIP
 */
-  function upload_zip(graph){
+  function upload_graph(graph){
     if(busy){ return; }
     busy = true;
     loader.style.display = "block";
@@ -370,15 +344,13 @@ window.onload = function(){
     }
 
     if(graph == null){
-      alert("No file uploaded", 1500);
+      alert("No file chosen", 1500);
       return;
     }
 
     var operation = e.target.value;
     var exist = graph.checkValues(operation);
-    if(exist){
-      return;
-    }
+    if(exist){ return; }
 
     if(busy){ return; }
     busy = true;
@@ -419,77 +391,84 @@ window.onload = function(){
     switch(operation){
       case "diameter":
         f = function(j){
-          DOM_result.innerHTML = "<p>Diameter: "+j.diameter+"</p>";
+          graph.diameter = j.diameter;
+          // DOM_result.innerHTML = "<p>Diameter: "+j.diameter+"</p>";
         }
         break;
 
       case "radius":
         f = function(j){
-          DOM_result.innerHTML = "<p>Radius: "+j.radius+"</p>";
+          graph.radius = j.radius;
+          // DOM_result.innerHTML = "<p>Radius: "+j.radius+"</p>";
         }
         break;
 
       case "number_connected_component":
         f = function(j){
-          DOM_result.innerHTML = "<p>Number of connected components: "+j.number_connected_components+"</p>";
+          graph.nb_connected_components = j.number_connected_components;
+          // DOM_result.innerHTML = "<p>Number of connected components: "+j.number_connected_components+"</p>";
         }
         break;
 
       case "density":
         f = function(j){
-          DOM_result.innerHTML = "<p>Density: "+j.density+"</p>";
+          graph.density = j.density;
+          // DOM_result.innerHTML = "<p>Density: "+j.density+"</p>";
         }
         break;
 
       case "index_pi_eta_theta":
         f = function(j){
-          DOM_result.innerHTML = "<p>Index &#960: "+j.pi+"</p>\
-                                  <p>Index &#951: "+j.eta+"</p>\
-                                  <p>Index &#952: "+j.theta+"</p>";
+          graph.pi = j.pi; graph.eta = j.eta; graph.theta = j.theta;
+          // DOM_result.innerHTML = "<p>Index &#960: "+j.pi+"</p>\
+          //                         <p>Index &#951: "+j.eta+"</p>\
+          //                         <p>Index &#952: "+j.theta+"</p>";
         }
         break;
 
       case "cyclo":
         f = function(j){
-          DOM_result.innerHTML = "<p>Cyclomatic complexity: "+j.cyclomatic+"</p>";
+          graph.cyclomatic = j.cyclomatic
+          // DOM_result.innerHTML = "<p>Cyclomatic complexity: "+j.cyclomatic+"</p>";
         }
         break;
 
       case "index_alpha_beta_gamma":
         f = function(j){
-          DOM_result.innerHTML = "<p>Index &#945: "+j.alpha+"</p>\
-                                  <p>Index &#946: "+j.beta+"</p>\
-                                  <p>Index &#967: "+j.gamma+"</p>";
+          graph.alpha = j.alpha; graph.beta = j.beta; graph.gamma = j.gamma;
+          // DOM_result.innerHTML = "<p>Index &#945: "+j.alpha+"</p>\
+          //                         <p>Index &#946: "+j.beta+"</p>\
+          //                         <p>Index &#967: "+j.gamma+"</p>";
         }
         break;
 
       case "centrality":
         f = function(j){
-
+          graph.centrality = j.centrality;
         }
         break;
 
       case "scale_free":
         f = function(j){
-
+          graph.scale_free = j.scale_free;
         }
         break;
 
       case "cluster":
         f = function(j){
-
+          graph.cluster_coef = j.cluster_coef;
         }
         break;
 
       case "average_shortest_path_length":
         f = function(j){
-
+          graph.shortest_path = j.shortest_path;
         }
         break;
 
       case "rich_club":
         f = function(j){
-
+          graph.rich_club_coef = j.rich_club_coef;
         }
         break;
     }
@@ -541,7 +520,7 @@ window.onload = function(){
           console.log(e.target)
           document.getElementById(e.target.id).checked = true;
           var id =  e.target.id.slice(-1);
-          display_zip(graph_list[id].zip_array_buffer);
+          display_graph(graph_list[id]);
         });
       }
     }
