@@ -11,29 +11,29 @@ function Graph(name){
   this.zip_array_buffer;
   this.zip_uint8array;
 
-  this.nb_nodes;
-  this.nb_edges;
-  this.total_length;
+  this.nb_nodes = "";
+  this.nb_edges = "";
+  this.total_length = "";
 
-  this.diameter;
-  this.radius;
-  this.nb_connected_components;
+  this.diameter = "";
+  this.radius = "";
+  this.nb_connected_components = "";
 
-  this.density;
-  this.pi;
-  this.eta;
-  this.theta;
-  this.alpha;
-  this.beta;
-  this.gamma;
+  this.density = "";
+  this.pi = "";
+  this.eta = "";
+  this.theta = "";
+  this.alpha = "";
+  this.beta = "";
+  this.gamma = "";
 
-  this.cyclomatic;
+  this.cyclomatic = "";
   this.centrality;
 
-  this.scale_free;
-  this.cluster_coef;
-  this.shortest_path;
-  this.rich_club_coef;
+  this.scale_free = "";
+  this.cluster_coef = "";
+  this.shortest_path = "";
+  this.rich_club_coef = "";
 }
 
 Graph.prototype.equalTo = function(graph){
@@ -46,31 +46,31 @@ Graph.prototype.equalTo = function(graph){
 Graph.prototype.checkValues = function(operation){
   switch(operation){
     case "diameter":
-      if(this.diameter){ return true; }
+      if(this.diameter != ""){ return true; }
       else{ return false; }
 
     case "radius":
-      if(this.radius){ return true; }
+      if(this.radius != ""){ return true; }
       else{ return false; }
 
     case "number_connected_component":
-      if(this.nb_connected_components){ return true; }
+      if(this.nb_connected_components != ""){ return true; }
       else{ return false; }
 
     case "density":
-      if(this.density){ return true; }
+      if(this.density != ""){ return true; }
       else{ return false; }
 
     case "index_pi_eta_theta":
-      if(this.pi && this.eta && this.theta){ return true; }
+      if(this.pi != "" && this.eta != "" && this.theta != ""){ return true; }
       else{ return false; }
 
     case "cyclo":
-      if(this.cyclomatic){ return true; }
+      if(this.cyclomatic != ""){ return true; }
       else{ return false; }
 
     case "index_alpha_beta_gamma":
-      if(this.alpha && this.beta && this.gamma){ return true; }
+      if(this.alpha != "" && this.beta != "" && this.gamma != ""){ return true; }
       else{ return false; }
 
     case "centrality":
@@ -78,19 +78,19 @@ Graph.prototype.checkValues = function(operation){
       else{ return false; }
 
     case "scale_free":
-      if(this.scale_free){ return true; }
+      if(this.scale_free != ""){ return true; }
       else{ return false; }
 
     case "cluster":
-      if(this.cluster_coef){ return true; }
+      if(this.cluster_coef != ""){ return true; }
       else{ return false; }
 
     case "average_shortest_path_length":
-      if(this.shortest_path){ return true; }
+      if(this.shortest_path != ""){ return true; }
       else{ return false; }
 
     case "rich_club":
-      if(this.rich_club_coef){ return true; }
+      if(this.rich_club_coef != ""){ return true; }
       else{ return false; }
   }
 }
@@ -105,7 +105,7 @@ window.onload = function(){
   var DOM_map_button = document.getElementById("map_button");
   var DOM_operation_list = document.getElementsByName("operation");
   var DOM_window_action = document.getElementsByClassName("window")[0];
-  var DOM_result = document.getElementById("result");
+  var DOM_result = document.getElementById("result_content");
   var loader = document.getElementById("loader");
 
 /**
@@ -207,8 +207,7 @@ window.onload = function(){
     JSZip.loadAsync(file).then(function(zip){
       var type, idx, file_types = ['shp', 'dbf', 'shx', 'prj'];
 
-      // parcours le ZIP pour vérifier chaque fichier
-      zip.forEach(function(relativePath, zipEntry) {
+      zip.forEach(function(relativePath, zipEntry) {    // parcours le ZIP pour vérifier chaque fichier
         type = zipEntry.name.split(".").pop().toLowerCase();
         idx = file_types.indexOf(type);
 
@@ -216,8 +215,7 @@ window.onload = function(){
         else{ zip.remove(relativePath); }
       });
 
-      // si le ZIP contient tout les fichiers nécéssaires
-      if(file_types.length < 1 || (file_types.length == 1 && file_types[0] == 'prj')){
+      if(file_types.length < 1 || (file_types.length == 1 && file_types[0] == 'prj')){    // si le ZIP contient tout les fichiers nécéssaires
         zip_file = zip;
         shp_file = zip.file(/.shp$/i)[0];
         var graph = new Graph(shp_file.name.split(".")[0]);
@@ -232,8 +230,7 @@ window.onload = function(){
         }
         graph_list.push(graph);
 
-        // Lecture du ZIP au format ArrayBuffer pour l'affichage
-        zip_file.generateAsync({type:"arraybuffer"})
+        zip_file.generateAsync({type:"arraybuffer"})    // Lecture du ZIP au format ArrayBuffer pour l'affichage
         .then(function success(content) {
           graph.zip_array_buffer = content;
           display_graph(graph);
@@ -241,8 +238,7 @@ window.onload = function(){
           throw e;
         });
 
-        // Lecture du ZIP au format UInt8Array pour l'envoi sur le serveur Node
-        // zip_file.generateAsync({type:"uint8array"})
+        // zip_file.generateAsync({type:"uint8array"})    // Lecture du ZIP au format UInt8Array pour l'envoi sur le serveur Node
         // .then(function success(content) {
         //   graph.zip_uint8array = content;
         //   busy = false;
@@ -278,6 +274,8 @@ window.onload = function(){
       map.addLayer(layer);
       map.fitBounds(layer.getBounds());
     });
+
+    set_result_window(graph);
   }
 
 /**
@@ -313,7 +311,6 @@ window.onload = function(){
         var json = JSON.parse(xhr.responseText);
         graph.nb_nodes = json.basics.nb_nodes;
         graph.nb_edges = json.basics.nb_edges;
-        document.getElementById("basic_result").innerHTML = "<p>Nodes: "+json.basics.nb_nodes+"</p><p>Edges: "+json.basics.nb_edges+"</p>";
 
         busy = false;
         loader.style.display = "none";
@@ -478,15 +475,6 @@ window.onload = function(){
   function set_file_window(){
     var div = document.querySelector("#file_wrap .content");
 
-    // var checked_id;
-    // for (var i = 0; i < div.children.length; i++) {
-    //   if(div.children[i].id.length > 0){
-    //     if(div.children[i].children[0].checked){
-    //       checked_id = div.children[i].children[0].id.slice(-1);
-    //     }
-    //   }
-    // }
-
     div.innerHTML = "";
     if(graph_list.length > 0){
       var child_div;
@@ -500,15 +488,6 @@ window.onload = function(){
         div.appendChild(child_div);
       }
 
-      // if(checked_id != undefined){
-      //   if(document.getElementById("graph_radio_"+String(checked_id)) != undefined){
-      //     document.getElementById("graph_radio_"+String(checked_id)).checked = true;
-      //   }
-      //   else{
-      //     document.getElementById("graph_radio_"+String(checked_id-1)).checked = true;
-      //   }
-      // }
-
       var close_list = document.getElementsByClassName("close");
       for(var i = 0; i < close_list.length; i++) {
         close_list[i].addEventListener('click', reset_file);
@@ -517,7 +496,6 @@ window.onload = function(){
       var g_list = document.getElementsByName("graph");
       for(var i = 0; i < g_list.length; i++) {
         g_list[i].addEventListener('click', function(e){
-          console.log(e.target)
           document.getElementById(e.target.id).checked = true;
           var id =  e.target.id.slice(-1);
           display_graph(graph_list[id]);
@@ -526,10 +504,8 @@ window.onload = function(){
     }
     else{
       div.innerHTML = "<p class='no_file'>No file uploaded</p>";
-      document.getElementById("result").innerHTML = "";
+      DOM_result.innerHTML = "";
     }
-
-
   }
 
 /**
@@ -544,16 +520,31 @@ window.onload = function(){
 */
   function reset_file(e){
     var id = e.target.parentElement.id.slice(-1);
+    var graph_id = null;
+
+    var form = document.querySelector("#file_wrap .content");
+    for(var i = 0; i < form.children.length; i++) {    // boucle pour trouver le graphe selectionné
+      if(form.children[i].id.length > 0){
+        if(form.children[i].children[0].checked){
+          graph_id = form.children[i].children[0].id.slice(-1);    // on stocke l'id du graphe actuellement sélectionné
+          if(graph_id == id){ graph_id = null; }
+          if(graph_id > id){ graph_id--; }
+        }
+      }
+    }
 
     if(document.getElementById("graph_radio_"+String(id)).checked == true){
       map.eachLayer(function(layer) {
         if(layer != map_raster){ map.removeLayer(layer); }
       });
+      DOM_result.innerHTML = "";
     }
 
-    graph_list.splice(id,1)
-    // document.getElementById("graph_radio_"+String(graph_list.length-1)).checked = true;
+    graph_list.splice(id,1);
     set_file_window();
+    if(graph_id != null){   // on resélectionne le graphe précédemment sélectionné
+      document.getElementById("graph_radio_"+String(graph_id)).checked = true;
+    }
   }
 
 /**
@@ -566,14 +557,34 @@ window.onload = function(){
       DOM_window_action.classList.remove("fa-window-minimize");
       DOM_window_action.classList.add("fa-window-maximize");
 
-      document.getElementById("result_content").style.maxHeight = "0";
+      DOM_result.style.height = "0";
     }
     else{
       DOM_window_action.classList.remove("fa-window-maximize");
       DOM_window_action.classList.add("fa-window-minimize");
 
-      document.getElementById("result_content").style.maxHeight = "300px";
+      DOM_result.style.height = "300px";
     }
+  }
+
+  function set_result_window(graph){
+    DOM_result.innerHTML = "<div class='result_tab'> \
+      <p>Noeud: "+graph.nb_nodes+"</p> <p>Arcs: "+graph.nb_edges+"</p> <p>Longueur totale: "+graph.total_length+"</p> \
+    </div> \
+    <div class='result_tab'> \
+      <p>Diamètre: "+graph.diameter+"</p> <p>Rayon: "+graph.radius+"</p> <p>Composants connexes: "+graph.nb_connected_components+"</p> \
+    </div> \
+    <div class='result_tab'> <p class='big_result'>Densité: "+graph.density+"</p> \
+      <p class='small_result'>&#960: "+graph.pi+"</p> <p class='small_result'>&#951: "+graph.eta+"</p> <p class='small_result'>&#952: "+graph.theta+"</p> \
+      <p class='small_result'>&#945: "+graph.alpha+"</p ><p class='small_result'>&#946: "+graph.beta+"</p> <p class='small_result'>&#947: "+graph.gamma+"</p> \
+    </div> \
+    <div class='result_tab'> \
+      <p>Nombre cyclomatique: "+graph.cyclomatic+"</p> <p>Centralité</p> \
+    </div> \
+    <div class='result_tab'> \
+      <p>Scale-Free: "+graph.scale_free+"</p> <p>Transitivité: "+graph.cluster_coef+"</p> \
+      <p>Plus courts chemin: "+graph.shortest_path+"</p> <p>Indice oligopolistique: "+graph.rich_club_coef+"</p> \
+    </div>"
   }
 
 /**
