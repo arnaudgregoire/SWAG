@@ -236,20 +236,20 @@ window.onload = function(){
         zip_file.generateAsync({type:"arraybuffer"})
         .then(function success(content) {
           graph.zip_array_buffer = content;
-          display_zip(graph.zip_array_buffer);
+          display_graph(graph);
         }, function error(e) {
           throw e;
         });
 
         // Lecture du ZIP au format UInt8Array pour l'envoi sur le serveur Node
-        zip_file.generateAsync({type:"uint8array"})
-        .then(function success(content) {
-          graph.zip_uint8array = content;
-          busy = false;
-          upload_graph(graph);
-        }, function error(e) {
-          throw e;
-        });
+        // zip_file.generateAsync({type:"uint8array"})
+        // .then(function success(content) {
+        //   graph.zip_uint8array = content;
+        //   busy = false;
+        //   upload_graph(graph);
+        // }, function error(e) {
+        //   throw e;
+        // });
 
         set_file_window();
         document.getElementById("graph_radio_"+String(graph_list.length-1)).checked = true;
