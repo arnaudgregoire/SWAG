@@ -203,12 +203,6 @@ html, body{
   z-index: 500;
 }
 
-#result_content{
-  max-height: 300px;
-  transition: all 0.2s;
-  -webkit-transition: all 0.2s;
-}
-
 .window{
   position: absolute;
   right: 10px;
@@ -219,21 +213,37 @@ html, body{
   color: rgba(255,255,255,1);
 }
 
-#basic_result, #result{
-  margin: 0;
-  padding: 3px;
-}
-#basic_result p{
-  display: inline;
-  margin:32px 10px;
-  padding: 4px;
+#result_content{
+  height: 300px;
+  overflow-y: scroll;
+  transition: all 0.2s;
+  -webkit-transition: all 0.2s;
 }
 
-#result p{
-  display: inline;
-  margin: 2px 10px;
-  padding: 4px;
+.result_tab{
+  padding: 5px 0;
+  margin: 5px 10px;
+  display: flex;
+  flex-flow: row wrap;
+  border-bottom: 1px solid #aaa;
 }
+.result_tab:last-child{
+  border: none;
+}
+
+.result_tab p{
+  margin: 2px 10px;
+  padding: 2px;
+  min-width: 150px;
+}
+.result_tab p.small_result{
+  min-width: 80px;
+}
+.result_tab p.big_result{
+  min-width: 300px;
+}
+
+
 
 #toolbox_wrap{
   position: absolute;

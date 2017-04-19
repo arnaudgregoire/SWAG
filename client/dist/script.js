@@ -23,11 +23,11 @@ function Graph(name){
   this.pi;
   this.eta;
   this.theta;
-
-  this.cyclomatic;
   this.alpha;
   this.beta;
   this.gamma;
+
+  this.cyclomatic;
   this.centrality;
 
   this.scale_free;

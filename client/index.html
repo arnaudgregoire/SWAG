@@ -22,61 +22,54 @@
 	<div id="shp_preview"></div>
 
 	<div id="button_wrap">
-		<label for="upload" id="upload_label">Upload ZIP file
+		<label for="upload" id="upload_label">Importer ZIP
 			<input id="upload_button" type="file" />
 		</label>
 
 		<div class="popup">
-			<p>File must contain: .shp, .dbf, .shx (.prj optional)</p>
+			<p>Fichiers obligatoires: .shp, .dbf, .shx (.prj optionnel)</p>
 		</div>
 	</div>
 
 	<div id="file_wrap">
-		<p class=title>File</p>
+		<p class=title>Fichiers</p>
 		<form class="content">
-			<p class="no_file">No file uploaded</p>
-			<!-- <div class="file_name">
-				<input type='radio' name='graph' id='graph_radio_1'><label for='graph_radio_1'>nom de graphe 1</label>
-				<p class='close fa fa-times'></p>
-			</div>
-			<div class="file_name">
-				<input type='radio' name='graph' id='graph_radio_2'><label for='graph_radio_2'>nom de graphe 2</label>
-				<p class='close fa fa-times'></p>
-			</div> -->
+			<p class="no_file">Aucun fichier</p>
 		</form>
 	</div>
 
 	<div id="back_map">
 		<input type="checkbox" checked="checked" id="map_button"/>
-		<label for="map_button">Background Map</label>
+		<label for="map_button">Fond de carte</label>
 	</div>
 
 	<div id="toolbox_wrap">
-		<input type="checkbox" id="toolbox_checkbox"><label for="toolbox_checkbox">Toolbox</label>
+		<input type="checkbox" id="toolbox_checkbox"><label for="toolbox_checkbox">Analyse</label>
 		<form id=toolbox>
 			<div class="drop_down">
-				<p>Size</p>
+				<p>Taille</p>
 				<div>
-					<input type='radio' name='operation' value='diameter' id='diameter'><label for='diameter'>Diameter</label>
-					<input type='radio' name='operation' value='radius' id='radius'><label for='radius'>Radius</label>
-					<input type='radio' name='operation' value='number_connected_component' id='connect'><label for='connect'>Connected Component</label>
+					<input type='radio' name='operation' value='diameter' id='diameter'><label for='diameter'>Diamètre</label>
+					<input type='radio' name='operation' value='radius' id='radius'><label for='radius'>Rayon</label>
+					<input type='radio' name='operation' value='number_connected_component' id='connect'><label for='connect'>Composants Connexes</label>
 				</div>
 			</div>
 
 			<div class="drop_down">
-				<p>Organization</p>
+				<p>Organisation</p>
 				<div>
-					<input type='radio' name='operation' value='density' id='density'><label for='density'>Density</label>
-					<input type='radio' name='operation' value='index_pi_eta_theta' id='index1'><label for='index1'>Index &#960,&#951, &#952</label>
-				</div>
-			</div>
-
-			<div class="drop_down">
-				<p>Graph Theory</p>
-				<div>
-					<input type='radio' name='operation' value='cyclo' id='cyclo'><label for='cyclo'>Cyclomatic</label>
+					<input type='radio' name='operation' value='density' id='density'><label for='density'>Densité</label>
+					<input type='radio' name='operation' value='index_pi_eta_theta' id='index1'><label for='index1'>Indices &#960,&#951, &#952</label>
 					<input type='radio' name='operation' value='index_alpha_beta_gamma' id='index2'><label for='index2'>Index &#945,&#946,&#947</label>
-					<input type='radio' name='operation' value='centrality' id='centrality'><label for='centrality'>Centrality</label>
+				</div>
+			</div>
+
+			<div class="drop_down">
+				<p>Centralité</p>
+				<div>
+					<input type='radio' name='operation' value='cyclo' id='cyclo'><label for='cyclo'>Nombre Cyclomatique</label>
+					<input type='radio' name='operation' value='centrality' id='centrality'><label for='centrality'>Centralité 1</label>
+					<input type='radio' name='operation' value='centrality' id='centrality'><label for='centrality'>Centralité 2</label>
 				</div>
 			</div>
 
@@ -84,9 +77,9 @@
 				<p>Structure</p>
 				<div>
 					<input type='radio' name='operation' value='scale_free' id='scale_free'><label for='scale_free'>Scale-Free</label>
-					<input type='radio' name='operation' value='cluster' id='cluster'><label for='cluster'>Clustering Coef.</label>
-					<input type='radio' name='operation' value='average_shortest_path_length' id='path'><label for='path'>Shortest Path</label>
-					<input type='radio' name='operation' value='rich_club' id='rich_club'><label for='rich_club'>Rich-Club Coef.</label>
+					<input type='radio' name='operation' value='cluster' id='cluster'><label for='cluster'>Transitivité</label>
+					<input type='radio' name='operation' value='average_shortest_path_length' id='path'><label for='path'>Plus Courts Chemins</label>
+					<input type='radio' name='operation' value='rich_club' id='rich_club'><label for='rich_club'>Indice Oligopolistique</label>
 				</div>
 			</div>
 
@@ -94,14 +87,32 @@
 	</div>
 
 	<div id="result_wrap">
-		<p class=title>Result <i class="window fa fa-window-minimize"></i></p>
+		<p class=title>Résultat <i class="window fa fa-window-minimize"></i></p>
 		<div id="result_content">
-			<div id="basic_result">
-				<p>Nodes: 0</p>
-				<p>Edges: 0</p>
+			<div class="result_tab">
+				<p>Noeud: 0</p>
+				<p>Arcs: 0</p>
+				<p>Longueur totale: 0</p>
 			</div>
-
-			<div id="result">
+			<div class="result_tab">
+				<p>Diamètre: 0</p>
+				<p>Rayon: 0</p>
+				<p>Composants connexes: 0</p>
+			</div>
+			<div class="result_tab">
+				<p class="big_result">Densité: 0</p>
+				<p class="small_result">&#960: 0</p> <p class="small_result">&#951: 0</p> <p class="small_result">&#952: 0</p>
+				<p class="small_result">&#945: 0</p ><p class="small_result">&#946: 0</p> <p class="small_result">&#947: 0</p>
+			</div>
+			<div class="result_tab">
+				<p>Nombre cyclomatique: 0</p>
+				<p>Centralité</p>
+			</div>
+			<div class="result_tab">
+				<p>Scale-Free: 0</p>
+				<p>Transitivité: 0</p>
+				<p>Plus courts chemin: 0</p>
+				<p>Indice Oligopolistique: 0</p>
 			</div>
 		</div>
 	</div>
