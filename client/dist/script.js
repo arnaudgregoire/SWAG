@@ -100,6 +100,7 @@ window.onload = function(){
   var graph_list = [];
   var busy = true;
   var map, map_raster, map_vector;
+  var game, music, end_music;
 
   var DOM_upload_button = document.getElementById("upload_button");
   var DOM_map_button = document.getElementById("map_button");
@@ -130,6 +131,11 @@ window.onload = function(){
     }
     DOM_window_action.addEventListener("click", toggle_result_window, false);
     busy = false;
+
+    music = new Audio("dist/audio1.mp3");
+    music.loop = true;
+    end_music = new Audio("dist/audio2.mp3");
+    // game = new Game("canvas",{playerColor: "#2ecc71", backgroundColor: "#ffffff", worldColor: "#3498db", textColor: "#000000"});
   }
 
 /**
@@ -188,7 +194,7 @@ window.onload = function(){
 * @param {event} e - l'évènement déclenché par le chargement d'un fichier
 */
   function document_select(e){
-    if(busy){ console.log("busy");return; }
+    if(busy){ return; }
 
     var file = DOM_upload_button.files[0];
     DOM_upload_button.value = "";
@@ -204,6 +210,8 @@ window.onload = function(){
   function handle_file(file){
     busy = true;
     loader.style.display = "block";
+    music.play();
+
     JSZip.loadAsync(file).then(function(zip){
       var type, idx, file_types = ['shp', 'dbf', 'shx', 'prj'];
 
@@ -224,6 +232,8 @@ window.onload = function(){
           if(graph_list[i].equalTo(graph)){
             busy = false;
             loader.style.display = "none";
+            music.pause();
+            end_music.play();
             alert("File already loaded",1500);
             return;
           }
@@ -253,6 +263,8 @@ window.onload = function(){
       else{
         busy = false;
         loader.style.display = "none";
+        music.pause();
+        end_music.play();
         alert("Zip file incorrect. Missing: "+file_types.toString(), 2500);
       }
     });
@@ -288,6 +300,7 @@ window.onload = function(){
     if(busy){ return; }
     busy = true;
     loader.style.display = "block";
+    music.play();
 
     var form = new FormData();
     form.append('zip',graph.zip_uint8array);
@@ -316,6 +329,8 @@ window.onload = function(){
 
         busy = false;
         loader.style.display = "none";
+        music.pause();
+        end_music.play();
       }
     };
 
@@ -354,6 +369,7 @@ window.onload = function(){
     if(busy){ return; }
     busy = true;
     loader.style.display = "block";
+    music.play();
 
     var callback = handle_operation(operation,graph);
     var form = new FormData();
@@ -368,11 +384,18 @@ window.onload = function(){
         console.log(xhr.responseText);
         var json = JSON.parse(xhr.responseText);
         callback(json);
-        console.log(graph);
         set_result_window(graph);
 
         busy = false;
         loader.style.display = "none";
+        music.pause();
+        end_music.play();
+      }
+      else if(xhr.readyState == 4 && xhr.status != 200){
+        busy = false;
+        loader.style.display = "none";
+        music.pause();
+        end_music.play();
       }
     };
 
