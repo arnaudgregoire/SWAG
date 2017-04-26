@@ -202,8 +202,8 @@ window.onload = function(){
 * @param {file} file - Le fichier chargé par l'utilisateur
 */
   function handle_file(file){
-    // busy = true;
-    // loader.style.display = "block";
+    busy = true;
+    loader.style.display = "block";
     JSZip.loadAsync(file).then(function(zip){
       var type, idx, file_types = ['shp', 'dbf', 'shx', 'prj'];
 
@@ -238,14 +238,14 @@ window.onload = function(){
           throw e;
         });
 
-        // zip_file.generateAsync({type:"uint8array"})    // Lecture du ZIP au format UInt8Array pour l'envoi sur le serveur Node
-        // .then(function success(content) {
-        //   graph.zip_uint8array = content;
-        //   busy = false;
-        //   upload_graph(graph);
-        // }, function error(e) {
-        //   throw e;
-        // });
+        zip_file.generateAsync({type:"uint8array"})    // Lecture du ZIP au format UInt8Array pour l'envoi sur le serveur Node
+        .then(function success(content) {
+          graph.zip_uint8array = content;
+          busy = false;
+          upload_graph(graph);
+        }, function error(e) {
+          throw e;
+        });
 
         set_file_window();
         document.getElementById("graph_radio_"+String(graph_list.length-1)).checked = true;
@@ -311,6 +311,8 @@ window.onload = function(){
         var json = JSON.parse(xhr.responseText);
         graph.nb_nodes = json.basics.nb_nodes;
         graph.nb_edges = json.basics.nb_edges;
+        graph.total_length = json.basics.total_length;
+        set_result_window(graph);
 
         busy = false;
         loader.style.display = "none";
@@ -366,6 +368,8 @@ window.onload = function(){
         console.log(xhr.responseText);
         var json = JSON.parse(xhr.responseText);
         callback(json);
+        console.log(graph);
+        set_result_window(graph);
 
         busy = false;
         loader.style.display = "none";
@@ -389,83 +393,76 @@ window.onload = function(){
       case "diameter":
         f = function(j){
           graph.diameter = j.diameter;
-          // DOM_result.innerHTML = "<p>Diameter: "+j.diameter+"</p>";
         }
         break;
 
       case "radius":
         f = function(j){
           graph.radius = j.radius;
-          // DOM_result.innerHTML = "<p>Radius: "+j.radius+"</p>";
         }
         break;
 
       case "number_connected_component":
         f = function(j){
           graph.nb_connected_components = j.number_connected_components;
-          // DOM_result.innerHTML = "<p>Number of connected components: "+j.number_connected_components+"</p>";
         }
         break;
 
       case "density":
         f = function(j){
           graph.density = j.density;
-          // DOM_result.innerHTML = "<p>Density: "+j.density+"</p>";
         }
         break;
 
       case "index_pi_eta_theta":
         f = function(j){
-          graph.pi = j.pi; graph.eta = j.eta; graph.theta = j.theta;
-          // DOM_result.innerHTML = "<p>Index &#960: "+j.pi+"</p>\
-          //                         <p>Index &#951: "+j.eta+"</p>\
-          //                         <p>Index &#952: "+j.theta+"</p>";
+          graph.pi = j.index_pi_eta_theta.pi;
+          graph.eta = j.index_pi_eta_theta.eta;
+          graph.theta = j.index_pi_eta_theta.theta;
         }
         break;
 
       case "cyclo":
         f = function(j){
-          graph.cyclomatic = j.cyclomatic
-          // DOM_result.innerHTML = "<p>Cyclomatic complexity: "+j.cyclomatic+"</p>";
+          // graph.cyclomatic = j.cyclomatic
         }
         break;
 
       case "index_alpha_beta_gamma":
         f = function(j){
-          graph.alpha = j.alpha; graph.beta = j.beta; graph.gamma = j.gamma;
-          // DOM_result.innerHTML = "<p>Index &#945: "+j.alpha+"</p>\
-          //                         <p>Index &#946: "+j.beta+"</p>\
-          //                         <p>Index &#967: "+j.gamma+"</p>";
+          graph.alpha = j.index_alpha_beta_gamma.alpha;
+          graph.beta = j.index_alpha_beta_gamma.beta;
+          graph.gamma = j.index_alpha_beta_gamma.gamma;
         }
         break;
 
       case "centrality":
         f = function(j){
-          graph.centrality = j.centrality;
+          // graph.centrality = j.centrality;
         }
         break;
 
       case "scale_free":
         f = function(j){
-          graph.scale_free = j.scale_free;
+          // graph.scale_free = j.scale_free;
         }
         break;
 
       case "cluster":
         f = function(j){
-          graph.cluster_coef = j.cluster_coef;
+          // graph.cluster_coef = j.cluster_coef;
         }
         break;
 
       case "average_shortest_path_length":
         f = function(j){
-          graph.shortest_path = j.shortest_path;
+          graph.shortest_path = j.average_shortest_path_length;
         }
         break;
 
       case "rich_club":
         f = function(j){
-          graph.rich_club_coef = j.rich_club_coef;
+          // graph.rich_club_coef = j.rich_club_coef;
         }
         break;
     }
