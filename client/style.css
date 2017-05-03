@@ -242,6 +242,10 @@ html, body{
 .result_tab p.big_result{
   min-width: 300px;
 }
+.result_tab p span{
+  color: #222;
+  font-weight: bold;
+}
 
 
 
