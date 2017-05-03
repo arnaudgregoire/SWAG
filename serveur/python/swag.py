@@ -7,15 +7,15 @@ from osgeo import ogr
 import time
 
 
-#shapefile = sys.argv[1]
-shapefile = "D://pc//Documents//ENSG//IT2//Projet Développement//donnees//1854_emprise.shp"
+shapefile = sys.argv[1]
+#shapefile = "D://pc//Documents//ENSG//IT2//Projet Développement//donnees//1854_emprise.shp"
 #shapefile = "D://pc//Documents//ENSG//IT2//Projet Développement//donnees//1871_L93_utf8_emprise.shp"
 #shapefile = "D://pc//Documents//ENSG//IT2//Projet Développement//donnees//andriveau_l93_utf8_corr.shp"
 #shapefile = "D://pc//Documents//ENSG//IT2//Projet Développement//donnees//jacoubet_l93_utf8.shp"
 
 
-#nomMethode = sys.argv[2]
-nomMethode = "rich_club_coefficient"
+nomMethode = sys.argv[2]
+#nomMethode = "rich_club_coefficient"
 
 
 
