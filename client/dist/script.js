@@ -32,6 +32,7 @@ function Graph(name){
   this.eigenvector_centrality = "";
   this.katz_centrality = "";
 
+  this.cyclomatic_number = "";
   this.clustering_coeff = "";
   this.average_clustering_coeff = "";
   this.shortest_path = "";
@@ -88,6 +89,10 @@ Graph.prototype.isEmpty = function(operation){
 
     case "katz_centrality":
       if(this.katz_centrality == ""){ return true; }
+      else{ return false; }
+
+    case "cyclomatic_number":
+      if(this.cyclomatic_number == ""){ return true; }
       else{ return false; }
 
     case "clustering_coefficient":
@@ -284,7 +289,7 @@ window.onload = function(){
 * @description Convertit le fichier SHP au format Geojson, et l'affiche sur la carte. Cette fonction utilise le module shapefile-js pour la conversion
 * @param {ArrayBuffer} buffer - Le buffer de données correspondant au fichier SHP
 */
-  function display_graph(graph){
+  function display_graph(graph,zoom=true){
     shp(graph.zip_array_buffer).then(function(geojson){
       map.eachLayer(function(layer) {
         if(layer != map_raster){ map.removeLayer(layer); }
@@ -292,7 +297,9 @@ window.onload = function(){
 
       var layer = L.geoJSON(geojson);
       map.addLayer(layer);
-      map.fitBounds(layer.getBounds());
+      if(zoom){
+        map.fitBounds(layer.getBounds());
+      }
     });
 
     set_result_window(graph);
@@ -395,8 +402,8 @@ window.onload = function(){
     xhr.onreadystatechange = function(){
       if(xhr.readyState == 4 && xhr.status == 200){
         console.log(xhr.responseText);
-        var json = JSON.parse(xhr.responseText);
-        callback(json);
+        // var json = JSON.parse(xhr.responseText);
+        callback(xhr.responseText);
 
         set_result_window(graph);
         if(DOM_window_action.classList.contains("fa-window-maximize")){
@@ -432,38 +439,44 @@ window.onload = function(){
     var f;
     switch(operation){
       case "diameter":
-        f = function(j){
+        f = function(text){
+          var j = JSON.parse(text);
           graph.diameter = j.diameter;
         }
         break;
 
       case "radius":
-        f = function(j){
+        f = function(text){
+          var j = JSON.parse(text);
           graph.radius = j.radius;
         }
         break;
 
       case "number_connected_component":
-        f = function(j){
+        f = function(text){
+          var j = JSON.parse(text);
           graph.nb_connected_components = j.number_connected_components;
         }
         break;
 
       case "density":
-        f = function(j){
+        f = function(text){
+          var j = JSON.parse(text);
           graph.density = parseFloat(j.density).toPrecision(5);
         }
         break;
 
       case "index_pi_eta":
-        f = function(j){
+        f = function(text){
+          var j = JSON.parse(text);
           graph.pi = parseFloat(j.index_pi_eta_theta.pi).toPrecision(5);
           graph.eta = parseFloat(j.index_pi_eta_theta.eta).toPrecision(5);
         }
         break;
 
       case "index_alpha_beta_gamma":
-        f = function(j){
+        f = function(text){
+          var j = JSON.parse(text);
           graph.alpha = parseFloat(j.index_alpha_beta_gamma.alpha).toPrecision(5);
           graph.beta = parseFloat(j.index_alpha_beta_gamma.beta).toPrecision(5);
           graph.gamma = parseFloat(j.index_alpha_beta_gamma.gamma).toPrecision(5);
@@ -471,54 +484,87 @@ window.onload = function(){
         break;
 
       case "degree_centrality":
-        f = function(j){
-          graph.degree_centrality = j;
+        f = function(text){
+          t = text_to_json(text);
+          graph.degree_centrality = JSON.parse(t);
         }
         break;
 
       case "closeness_centrality":
-        f = function(j){
-          graph.closeness_centrality = j;
+        f = function(text){
+          t = text_to_json(text);
+          graph.closeness_centrality = JSON.parse(t);
         }
         break;
 
       case "betweenness_centrality":
-        f = function(j){
-          graph.betweenness_centrality = j;
+        f = function(text){
+          t = text_to_json(text);
+          graph.betweenness_centrality = JSON.parse(t);
         }
         break;
 
       case "eigenvector_centrality":
-        f = function(j){
-          graph.eigenvector_centrality = j;
+        f = function(text){
+          t = text_to_json(text);
+          graph.eigenvector_centrality = JSON.parse(t);
         }
         break;
 
       case "katz_centrality":
-        f = function(j){
-          graph.katz_centrality = j;
+        f = function(text){
+          t = text_to_json(text);
+          graph.katz_centrality = JSON.parse(t);
+        }
+        break;
+
+      case "cyclomatic_number":
+        f = function(text){
+          var j = JSON.parse(text);
+          graph.cyclomatic_number = j.cyclomatic_number;
         }
         break;
 
       case "clustering_coefficient":
-        f = function(j){
-          graph.clustering_coeff = j;
+        f = function(text){
+          t = text_to_json(text);
+          graph.clustering_coeff = JSON.parse(t);
         }
         break;
 
       case "average_clustering_coefficient":
-        f = function(j){
+        f = function(text){
+          var j = JSON.parse(text);
           graph.average_clustering_coeff = parseFloat(j).toPrecision(6);
         }
         break;
 
       case "average_shortest_path_length":
-        f = function(j){
+        f = function(text){
+          var j = JSON.parse(text);
           graph.shortest_path = parseFloat(j.average_shortest_path_length).toPrecision(8);
         }
         break;
     }
     return f;
+  }
+
+  function text_to_json(text){
+    var t = text.substring(1,text.length-2);
+    var liste = t.split("(");
+
+    var result = '{"nodes": [';
+    var node,coord,x,y,value;
+    for(var i=1; i<liste.length; i++){
+      node = liste[i].split(":");
+      value = parseFloat(node[1]);
+      coord = node[0].split(",");
+      x = parseFloat(coord[0]); y = parseFloat(coord[1]);
+      result += '{"id": ' + String(i-1) + ', "x": ' + String(x) + ', "y": ' + String(y) + ', "value": ' + String(value) + '},';
+    }
+
+    result = result.substring(0,result.length-1) + "]}";
+    return result;
   }
 
   function set_file_window(){
@@ -547,7 +593,7 @@ window.onload = function(){
         g_list[i].addEventListener('click', function(e){
           document.getElementById(e.target.id).checked = true;
           var id =  e.target.id.slice(-1);
-          display_graph(graph_list[id]);
+          display_graph(graph_list[id],false);
         });
       }
     }
@@ -630,13 +676,13 @@ window.onload = function(){
     <div class='result_tab'> \
       <p class='big_result'><span>Densité:</span> "+graph.density+"</p> \
       <p class='small_result'><span>&#960:</span> "+graph.pi+"</p> \
-      <p class='small_result'><span>&#951:</span> "+graph.eta+"</p> \
-      <p class='small_result'><span>&#945</span> "+graph.alpha+"</p> \
+      <p><span>&#951:</span> "+graph.eta+"</p> \
+      <p class='small_result'><span>&#945:</span> "+graph.alpha+"</p> \
       <p class='small_result'><span>&#946:</span> "+graph.beta+"</p> \
       <p class='small_result'><span>&#947:</span> "+graph.gamma+"</p> \
     </div> \
     <div class='result_tab'> \
-      <p><span>Transitivité:</span> "+graph.clustering_coeff+"</p> \
+      <p><span>Nombre cylomatique:</span> "+graph.cyclomatic_number+"\
       <p><span>Transitivité moyenne:</span> "+graph.average_clustering_coeff+"\
       <p><span>Plus courts chemin:</span> "+graph.shortest_path+"</p> \
     </div>"
