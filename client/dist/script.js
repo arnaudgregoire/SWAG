@@ -22,7 +22,6 @@ function Graph(name){
   this.density = "";
   this.pi = "";
   this.eta = "";
-  this.theta = "";
   this.alpha = "";
   this.beta = "";
   this.gamma = "";
@@ -33,11 +32,9 @@ function Graph(name){
   this.eigenvector_centrality = "";
   this.katz_centrality = "";
 
-  this.flow_hierarchy = "";
   this.clustering_coeff = "";
   this.average_clustering_coeff = "";
   this.shortest_path = "";
-  this.rich_club_coeff = "";
 }
 
 Graph.prototype.equalTo = function(graph){
@@ -65,8 +62,8 @@ Graph.prototype.isEmpty = function(operation){
       if(this.density == ""){ return true; }
       else{ return false; }
 
-    case "index_pi_eta_theta":
-      if(this.pi == "" && this.eta == "" && this.theta == ""){ return true; }
+    case "index_pi_eta":
+      if(this.pi == "" && this.eta == ""){ return true; }
       else{ return false; }
 
     case "index_alpha_beta_gamma":
@@ -93,10 +90,6 @@ Graph.prototype.isEmpty = function(operation){
       if(this.katz_centrality == ""){ return true; }
       else{ return false; }
 
-    case "flow_hierarchy":
-      if(this.flow_hierarchy == ""){ return true; }
-      else{ return false; }
-
     case "clustering_coefficient":
       if(this.clustering_coeff == ""){ return true; }
       else{ return false; }
@@ -107,10 +100,6 @@ Graph.prototype.isEmpty = function(operation){
 
     case "average_shortest_path_length":
       if(this.shortest_path == ""){ return true; }
-      else{ return false; }
-
-    case "rich_club_coefficient":
-      if(this.rich_club_coeff == ""){ return true; }
       else{ return false; }
   }
 }
@@ -200,7 +189,7 @@ window.onload = function(){
       handle_file(file);
     }
     else{
-      alert("ZIP file only", 1500);
+      alert("ZIP non reconnu", 1500);
     }
   }
 
@@ -253,7 +242,7 @@ window.onload = function(){
             loader.style.display = "none";
             music.pause();
             end_music.play();
-            alert("File already loaded",1500);
+            alert("Fichier déjà importé",1500);
             return;
           }
         }
@@ -284,7 +273,7 @@ window.onload = function(){
         loader.style.display = "none";
         music.pause();
         end_music.play();
-        alert("Zip file incorrect. Missing: "+file_types.toString(), 2500);
+        alert("ZIP incorrect. Manque: "+file_types.toString(), 2500);
       }
     });
   }
@@ -345,7 +334,11 @@ window.onload = function(){
         graph.nb_nodes = json.basics.nb_nodes;
         graph.nb_edges = json.basics.nb_edges;
         graph.total_length = json.basics.total_length;
+
         set_result_window(graph);
+        if(DOM_window_action.classList.contains("fa-window-maximize")){
+          toggle_result_window();
+        }
 
         busy = false;
         loader.style.display = "none";
@@ -378,7 +371,7 @@ window.onload = function(){
     }
 
     if(graph == null){
-      alert("No file chosen", 1500);
+      alert("Aucun fichier importé", 1500);
       return;
     }
 
@@ -404,7 +397,11 @@ window.onload = function(){
         console.log(xhr.responseText);
         var json = JSON.parse(xhr.responseText);
         callback(json);
+
         set_result_window(graph);
+        if(DOM_window_action.classList.contains("fa-window-maximize")){
+          toggle_result_window();
+        }
 
         busy = false;
         loader.style.display = "none";
@@ -416,6 +413,7 @@ window.onload = function(){
         loader.style.display = "none";
         music.pause();
         end_music.play();
+        alert("Erreur serveur",2000);
       }
     };
 
@@ -453,23 +451,22 @@ window.onload = function(){
 
       case "density":
         f = function(j){
-          graph.density = j.density;
+          graph.density = parseFloat(j.density).toPrecision(5);
         }
         break;
 
-      case "index_pi_eta_theta":
+      case "index_pi_eta":
         f = function(j){
-          graph.pi = j.index_pi_eta_theta.pi;
-          graph.eta = j.index_pi_eta_theta.eta;
-          graph.theta = j.index_pi_eta_theta.theta;
+          graph.pi = parseFloat(j.index_pi_eta_theta.pi).toPrecision(5);
+          graph.eta = parseFloat(j.index_pi_eta_theta.eta).toPrecision(5);
         }
         break;
 
       case "index_alpha_beta_gamma":
         f = function(j){
-          graph.alpha = j.index_alpha_beta_gamma.alpha;
-          graph.beta = j.index_alpha_beta_gamma.beta;
-          graph.gamma = j.index_alpha_beta_gamma.gamma;
+          graph.alpha = parseFloat(j.index_alpha_beta_gamma.alpha).toPrecision(5);
+          graph.beta = parseFloat(j.index_alpha_beta_gamma.beta).toPrecision(5);
+          graph.gamma = parseFloat(j.index_alpha_beta_gamma.gamma).toPrecision(5);
         }
         break;
 
@@ -503,12 +500,6 @@ window.onload = function(){
         }
         break;
 
-      case "flow_hierarchy":
-        f = function(j){
-          graph.flow_hierarchy = j.flow_hierarchy;
-        }
-        break;
-
       case "clustering_coefficient":
         f = function(j){
           graph.clustering_coeff = j;
@@ -517,19 +508,13 @@ window.onload = function(){
 
       case "average_clustering_coefficient":
         f = function(j){
-          graph.average_clustering_coeff = j;
+          graph.average_clustering_coeff = parseFloat(j).toPrecision(6);
         }
         break;
 
       case "average_shortest_path_length":
         f = function(j){
-          graph.shortest_path = j.average_shortest_path_length;
-        }
-        break;
-
-      case "rich_club_coefficient":
-        f = function(j){
-          graph.rich_club_coeff = j;
+          graph.shortest_path = parseFloat(j.average_shortest_path_length).toPrecision(8);
         }
         break;
     }
@@ -633,23 +618,27 @@ window.onload = function(){
 
   function set_result_window(graph){
     DOM_result.innerHTML = "<div class='result_tab'> \
-      <p><span>Noeuds:</span> "+graph.nb_nodes+"</p> <p><span>Arcs:</span> "+graph.nb_edges+"</p> <p><span>Longueur totale:</span> "+graph.total_length+"</p> \
+      <p><span>Noeuds:</span> "+graph.nb_nodes+"</p> \
+      <p><span>Arcs:</span> "+graph.nb_edges+"</p> \
+      <p><span>Longueur totale:</span> "+graph.total_length+"</p> \
     </div> \
     <div class='result_tab'> \
-      <p><span>Diamètre:</span> "+graph.diameter+"</p> <p><span>Rayon:</span> "+graph.radius+"</p> <p><span>Composants connexes:</span> "+graph.nb_connected_components+"</p> \
+      <p><span>Diamètre:</span> "+graph.diameter+"</p> \
+      <p><span>Rayon:</span> "+graph.radius+"</p> \
+      <p><span>Composantes connexes:</span> "+graph.nb_connected_components+"</p> \
     </div> \
     <div class='result_tab'> \
       <p class='big_result'><span>Densité:</span> "+graph.density+"</p> \
-      <p class='small_result'><span>&#960:</span> "+graph.pi+"</p> <p class='small_result'><span>&#951:</span> "+graph.eta+"</p> <p class='small_result'><span>&#952:</span> "+graph.theta+"</p> \
-      <p class='small_result'><span>&#945:</span> "+graph.alpha+"</p ><p class='small_result'><span>&#946:</span> "+graph.beta+"</p> <p class='small_result'><span>&#947:</span> "+graph.gamma+"</p> \
+      <p class='small_result'><span>&#960:</span> "+graph.pi+"</p> \
+      <p class='small_result'><span>&#951:</span> "+graph.eta+"</p> \
+      <p class='small_result'><span>&#945</span> "+graph.alpha+"</p> \
+      <p class='small_result'><span>&#946:</span> "+graph.beta+"</p> \
+      <p class='small_result'><span>&#947:</span> "+graph.gamma+"</p> \
     </div> \
     <div class='result_tab'> \
-      <p><span>Centralité</span> </p> \
-    </div> \
-    <div class='result_tab'> \
-      <p class='big_result'><span>Hiérarchie:</span> "+graph.flow_hierarchy+"</p> \
-      <p><span>Transitivité:</span> "+graph.clustering_coeff+"</p> <p><span>Transitivité (moyenne):</span> "+graph.average_clustering_coeff+"\
-      <p><span>Plus courts chemin:</span> "+graph.shortest_path+"</p> <p><span>Indice oligopolistique:</span> "+graph.rich_club_coeff+"</p> \
+      <p><span>Transitivité:</span> "+graph.clustering_coeff+"</p> \
+      <p><span>Transitivité moyenne:</span> "+graph.average_clustering_coeff+"\
+      <p><span>Plus courts chemin:</span> "+graph.shortest_path+"</p> \
     </div>"
   }
 
