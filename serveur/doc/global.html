@@ -201,7 +201,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="serveur.js.html">serveur.js</a>, <a href="serveur.js.html#line117">line 117</a>
+        <a href="serveur.js.html">serveur.js</a>, <a href="serveur.js.html#line121">line 121</a>
     </li></ul></dd>
     
 
@@ -254,7 +254,7 @@
 
     
 
-    <h4 class="name" id="dezip"><span class="type-signature"></span>dezip<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="dezip"><span class="type-signature"></span>dezip<span class="signature">(name)</span><span class="type-signature"></span></h4>
 
     
 
@@ -262,88 +262,6 @@
 
 <div class="description">
     Dezip le fichier out.zip contenu dans le dossier zip et écrit son contenu dans le dossier shp
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="serveur.js.html">serveur.js</a>, <a href="serveur.js.html#line28">line 28</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="python_call"><span class="type-signature"></span>python_call<span class="signature">(data, name, operation)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
 </div>
 
 
@@ -379,53 +297,7 @@
 
         <tr>
             
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Le contenu du .zip transmis par le client</td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">name</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">le nom du zip/fichier envoyé par le client</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>operation</code></td>
             
 
             <td class="type">
@@ -441,7 +313,7 @@
 
             
 
-            <td class="description last">Le nom de l'opération demandé par le client</td>
+            <td class="description last">le nom du shapefile</td>
         </tr>
 
     
@@ -482,7 +354,161 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="serveur.js.html">serveur.js</a>, <a href="serveur.js.html#line50">line 50</a>
+        <a href="serveur.js.html">serveur.js</a>, <a href="serveur.js.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="python_call"><span class="type-signature"></span>python_call<span class="signature">(name, operation)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Fonction d'appel à la commande python & envoi des données au client
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">le nom du shapefile</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>operation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">le nom de l'opération</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="serveur.js.html">serveur.js</a>, <a href="serveur.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -659,7 +685,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="serveur.js.html">serveur.js</a>, <a href="serveur.js.html#line73">line 73</a>
+        <a href="serveur.js.html">serveur.js</a>, <a href="serveur.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -707,7 +733,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed May 03 2017 14:06:36 GMT+0200 (Paris, Madrid (heure d’été))
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Wed May 03 2017 15:41:22 GMT+0200 (Paris, Madrid (heure d’été))
 </footer>
 
 <script> prettyPrint(); </script>

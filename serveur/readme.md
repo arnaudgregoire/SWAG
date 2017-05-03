@@ -75,3 +75,9 @@ Une fois que le serveur a envoyé le retour python au client, il affiche :
 ```sh
 envoi des données au client
 ```
+## Documentation utilisateur
+Pour aider l'utilisateur, les fonctions du script serveur.js ont été documentées.
+La documentation est disponible :
+
+-  dans les commentaires du fichier script.js
+-  dans le dossier doc sous la forme de pages internet (généré par jsdoc)
