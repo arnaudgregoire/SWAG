@@ -1,5 +1,5 @@
 # Création d’une plateforme Web d’analyse de réseaux spatiaux
-## SWAG : Service Web d'Analyse de Shapefile
+## SWAG : Service Web d'Analyse de Graphe
 ### Objectifs pour le groupe d’ingénieurs
 Concevoir et mettre en place une plateforme Web permettant
 l’analyse d’un réseau via les outils classiques de théories des graphes
