@@ -7,15 +7,15 @@ from osgeo import ogr
 import time
 
 
-shapefile = sys.argv[1]
-#shapefile = "E://pc//Documents//ENSG//IT2//Projet Développement//donnees//1854_emprise.shp"
-#shapefile = "E://pc//Documents//ENSG//IT2//Projet Développement//donnees//1871_L93_utf8_emprise.shp"
-#shapefile = "E://pc//Documents//ENSG//IT2//Projet Développement//donnees//andriveau_l93_utf8_corr.shp"
-#shapefile = "E://pc//Documents//ENSG//IT2//Projet Développement//donnees//jacoubet_l93_utf8.shp"
+#shapefile = sys.argv[1]
+shapefile = "D://pc//Documents//ENSG//IT2//Projet Développement//donnees//1854_emprise.shp"
+#shapefile = "D://pc//Documents//ENSG//IT2//Projet Développement//donnees//1871_L93_utf8_emprise.shp"
+#shapefile = "D://pc//Documents//ENSG//IT2//Projet Développement//donnees//andriveau_l93_utf8_corr.shp"
+#shapefile = "D://pc//Documents//ENSG//IT2//Projet Développement//donnees//jacoubet_l93_utf8.shp"
 
 
-nomMethode = sys.argv[2]
-#nomMethode = "basics"
+#nomMethode = sys.argv[2]
+nomMethode = "rich_club_coefficient"
 
 
 
@@ -55,7 +55,7 @@ def main(shapefile, nomMethode):
         - number_connected_component
         - density
         - average_shortest_path_length
-        - index_alpha_beta_gamma
+        - index_beta_gamma
         - index_pi_eta_theta
     """
     
@@ -67,7 +67,7 @@ def main(shapefile, nomMethode):
 
     # On rend le graphe non-orienté
     G = G2.to_undirected()
-    #☻print("coool",G.is_directed())
+    # print("coool",G.is_directed())
 
     #nx.draw_networkx(G)
     
@@ -91,11 +91,38 @@ def main(shapefile, nomMethode):
     elif nomMethode == "average_shortest_path_length":
         fun_average_shortest_path_length(G,"LENGTH")
         
-    elif nomMethode == "index_alpha_beta_gamma":
-        fun_index_alpha_beta_gamma(G)
+    elif nomMethode == "index_beta_gamma":
+        fun_index_beta_gamma(G)
         
     elif nomMethode == "index_pi_eta_theta":
         fun_index_pi_eta_theta(G)
+        
+    elif nomMethode == "degree_centrality":
+        fun_degree_centrality(G)
+    
+    elif nomMethode == "closeness_centrality":
+        fun_closeness_centrality(G,"LENGTH")
+    
+    elif nomMethode == "betweenness_centrality":
+        fun_betweenness_centrality(G,"LENGTH")
+        
+    elif nomMethode == "eigenvector_centrality":
+        fun_eigenvector_centrality(G,"LENGTH")
+        
+    elif nomMethode == "katz_centrality":
+        fun_katz_centrality(G,"LENGTH")
+        
+    elif nomMethode == "flow_hierarchy":
+        fun_flow_hierarchy(G,"LENGTH")
+        
+    elif nomMethode == "clustering_coefficient":
+        fun_clustering_coefficient(G,"LENGTH")
+        
+    elif nomMethode == "average_clustering_coefficient":
+        fun_average_clustering_coefficient(G,"LENGTH")
+    
+    elif nomMethode == "rich_club_coefficient":
+        fun_rich_club_coefficient(G)
         
     else :
         print("nom de méthode non défini")
@@ -191,10 +218,8 @@ def fun_index_pi_eta_theta(G) :
 
 
 # Nombre cyclomatique (nombre maximum de cycles indépendants)
-def fun_index_alpha_beta_gamma(G) :
-    
-    # Indice alpha (nombre de cycles sur nombres maximums de cycle possible)
-    alpha = len(nx.simple_cycles(G)) / len(nx.simple_cycles(nx.complete_graph(nx.number_of_nodes)))
+
+def fun_index_beta_gamma(G) :
     
     # Indice beta (nombre d'arcs sur nombre de sommets)
     beta = nx.number_of_edges(G) / nx.number_of_nodes(G)
@@ -202,11 +227,38 @@ def fun_index_alpha_beta_gamma(G) :
     # Indice gamma (nombre d'arcs sur nombre maximum d'arcs possible)
     gamma = nx.number_of_edges(G) / (nx.number_of_nodes(G) - 2) * 3
     
-    s = '{"index_alpha_beta_gamma":{"alpha" : ' + str(alpha) + ', "beta" : ' + str(beta) + ', "gamma" : ' + str(gamma) + '}}'
+    s = '{"index_beta_gamma":{"beta" : ' + str(beta) + ', "gamma" : ' + str(gamma) + '}}'
     print(s)
     
+def fun_degree_centrality(G) :
+         
+    # Centralité de degré
+    s = nx.degree_centrality(G)
+    print(s)
+ 
+def fun_closeness_centrality(G,weight) :
     
-# Centralité (Somme des centralités individuelles des noeuds)
+    # Centralité de proximité avec la prise en compte des distances
+    s = nx.current_flow_closeness_centrality(G,weight)
+    print(s)
+
+def fun_betweenness_centrality(G,weight) :
+    
+    # Centralité d'intermédiarité
+    s = nx.current_flow_betweenness_centrality(G,weight)
+    print(s)
+
+def fun_eigenvector_centrality(G,weight) :
+    
+    # Centralité de vecteur propre
+    s = nx.eigenvector_centrality_numpy(G,weight)
+    print(s)
+
+def fun_katz_centrality(G,weight) :
+    
+    # Centralité de Katz
+    s = nx.katz_centrality_numpy(G,0.1,1.0,True,weight)
+    print(s)
 
 
 #/////////////////////////////////////////////////////////////////////
@@ -214,9 +266,26 @@ def fun_index_alpha_beta_gamma(G) :
 #/////////////////////////////////////////////////////////////////////
 
 
-# Indice de hiérarchie (Scale-free)
-# Transitivité (Clustering coefficient)
-# Transitivité (average clustering coefficient)
+def fun_flow_hierarchy(G,weight):
+    
+    # Indice de hiérarchie (Scale-free)
+    flow_hierarchy = nx.flow_hierarchy(G,weight)
+    s = '{"flow_hierarchy" : ' + str(flow_hierarchy) + '}'
+    print(s)
+
+def fun_clustering_coefficient(G,weight) :
+    
+    # Transitivité (Clustering coefficient)
+    clustering_coefficient = nx.clustering(G,None,weight)
+    s = clustering_coefficient
+    print(s)
+    
+def fun_average_clustering_coefficient(G,weight):
+    
+    # Transitivité (average clustering coefficient)
+    average_clustering_coefficient = nx.average_clustering(G,None,weight)
+    s = average_clustering_coefficient
+    print(s)
 
 def fun_average_shortest_path_length(G,weight=None) :
     # Longueur moyenne des plus courts chemin
@@ -224,13 +293,14 @@ def fun_average_shortest_path_length(G,weight=None) :
     s = '{"average_shortest_path_length" : ' + str(average_shortest_path_length) + '}'
     print(s)
 
-# Indice oligopolistique (Rich-club coefficient)
-#rich_club_coefficient = nx.rich_club_coefficient(G)
-#print(rich_club_coefficient)
+def fun_rich_club_coefficient(G):
+    # Indice oligopolistique (Rich-club coefficient)
+    rich_club_coefficient = nx.rich_club_coefficient(G)
+    print(rich_club_coefficient)
 
 toc = time.time()
 
 main(shapefile, nomMethode)
 
 tic = time.time()
-#print(tic-toc)
+print(tic-toc)
