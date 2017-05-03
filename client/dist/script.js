@@ -27,13 +27,17 @@ function Graph(name){
   this.beta = "";
   this.gamma = "";
 
-  this.cyclomatic = "";
-  this.centrality;
+  this.degree_centrality = "";
+  this.closeness_centrality = "";
+  this.betweenness_centrality = "";
+  this.eigenvector_centrality = "";
+  this.katz_centrality = "";
 
-  this.scale_free = "";
-  this.cluster_coef = "";
+  this.flow_hierarchy = "";
+  this.clustering_coeff = "";
+  this.average_clustering_coeff = "";
   this.shortest_path = "";
-  this.rich_club_coef = "";
+  this.rich_club_coeff = "";
 }
 
 Graph.prototype.equalTo = function(graph){
@@ -43,54 +47,70 @@ Graph.prototype.equalTo = function(graph){
   return false;
 }
 
-Graph.prototype.checkValues = function(operation){
+Graph.prototype.isEmpty = function(operation){
   switch(operation){
     case "diameter":
-      if(this.diameter != ""){ return true; }
+      if(this.diameter == ""){ return true; }
       else{ return false; }
 
     case "radius":
-      if(this.radius != ""){ return true; }
+      if(this.radius == ""){ return true; }
       else{ return false; }
 
     case "number_connected_component":
-      if(this.nb_connected_components != ""){ return true; }
+      if(this.nb_connected_components == ""){ return true; }
       else{ return false; }
 
     case "density":
-      if(this.density != ""){ return true; }
+      if(this.density == ""){ return true; }
       else{ return false; }
 
     case "index_pi_eta_theta":
-      if(this.pi != "" && this.eta != "" && this.theta != ""){ return true; }
-      else{ return false; }
-
-    case "cyclo":
-      if(this.cyclomatic != ""){ return true; }
+      if(this.pi == "" && this.eta == "" && this.theta == ""){ return true; }
       else{ return false; }
 
     case "index_alpha_beta_gamma":
-      if(this.alpha != "" && this.beta != "" && this.gamma != ""){ return true; }
+      if(this.alpha == "" && this.beta == "" && this.gamma == ""){ return true; }
       else{ return false; }
 
-    case "centrality":
-      if(this.centrality){ return true; }
+    case "degree_centrality":
+      if(this.degree_centrality == ""){ return true; }
       else{ return false; }
 
-    case "scale_free":
-      if(this.scale_free != ""){ return true; }
+    case "closeness_centrality":
+      if(this.closeness_centrality == ""){ return true; }
       else{ return false; }
 
-    case "cluster":
-      if(this.cluster_coef != ""){ return true; }
+    case "betweenness_centrality":
+      if(this.betweenness_centrality == ""){ return true; }
+      else{ return false; }
+
+    case "eigenvector_centrality":
+      if(this.eigenvector_centrality == ""){ return true; }
+      else{ return false; }
+
+    case "katz_centrality":
+      if(this.katz_centrality == ""){ return true; }
+      else{ return false; }
+
+    case "flow_hierarchy":
+      if(this.flow_hierarchy == ""){ return true; }
+      else{ return false; }
+
+    case "clustering_coefficient":
+      if(this.clustering_coeff == ""){ return true; }
+      else{ return false; }
+
+    case "average_clustering_coefficient":
+      if(this.average_clustering_coeff == ""){ return true; }
       else{ return false; }
 
     case "average_shortest_path_length":
-      if(this.shortest_path != ""){ return true; }
+      if(this.shortest_path == ""){ return true; }
       else{ return false; }
 
-    case "rich_club":
-      if(this.rich_club_coef != ""){ return true; }
+    case "rich_club_coefficient":
+      if(this.rich_club_coeff == ""){ return true; }
       else{ return false; }
   }
 }
@@ -100,7 +120,7 @@ window.onload = function(){
   var graph_list = [];
   var busy = true;
   var map, map_raster, map_vector;
-  var game, music, end_music;
+  var music, end_music;
 
   var DOM_upload_button = document.getElementById("upload_button");
   var DOM_map_button = document.getElementById("map_button");
@@ -116,8 +136,7 @@ window.onload = function(){
 */
   function init_listener(){
     zip = new JSZip();
-    // console.log("JSZip support:");
-    // console.log(JSZip.support);
+    // console.log("JSZip support:"); console.log(JSZip.support);
 
     document.addEventListener('drop', document_drop, false);
     var e_prevent_default = function(e){ e.preventDefault(); };
@@ -135,7 +154,6 @@ window.onload = function(){
     music = new Audio("dist/audio1.mp3");
     music.loop = true;
     end_music = new Audio("dist/audio2.mp3");
-    // game = new Game("canvas",{playerColor: "#2ecc71", backgroundColor: "#ffffff", worldColor: "#3498db", textColor: "#000000"});
   }
 
 /**
@@ -198,6 +216,7 @@ window.onload = function(){
 
     var file = DOM_upload_button.files[0];
     DOM_upload_button.value = "";
+    e.dataTransfer = null;
     handle_file(file);
   }
 
@@ -321,6 +340,7 @@ window.onload = function(){
 
     xhr.onreadystatechange = function(){
       if(xhr.readyState == 4 && xhr.status == 200){
+        console.log(xhr.responseText);
         var json = JSON.parse(xhr.responseText);
         graph.nb_nodes = json.basics.nb_nodes;
         graph.nb_edges = json.basics.nb_edges;
@@ -363,8 +383,8 @@ window.onload = function(){
     }
 
     var operation = e.target.value;
-    var exist = graph.checkValues(operation);
-    if(exist){ return; }
+    var empty = graph.isEmpty(operation);
+    if(!empty){ return; }
 
     if(busy){ return; }
     busy = true;
@@ -445,12 +465,6 @@ window.onload = function(){
         }
         break;
 
-      case "cyclo":
-        f = function(j){
-          // graph.cyclomatic = j.cyclomatic
-        }
-        break;
-
       case "index_alpha_beta_gamma":
         f = function(j){
           graph.alpha = j.index_alpha_beta_gamma.alpha;
@@ -459,21 +473,51 @@ window.onload = function(){
         }
         break;
 
-      case "centrality":
+      case "degree_centrality":
         f = function(j){
-          // graph.centrality = j.centrality;
+          graph.degree_centrality = j;
         }
         break;
 
-      case "scale_free":
+      case "closeness_centrality":
         f = function(j){
-          // graph.scale_free = j.scale_free;
+          graph.closeness_centrality = j;
         }
         break;
 
-      case "cluster":
+      case "betweenness_centrality":
         f = function(j){
-          // graph.cluster_coef = j.cluster_coef;
+          graph.betweenness_centrality = j;
+        }
+        break;
+
+      case "eigenvector_centrality":
+        f = function(j){
+          graph.eigenvector_centrality = j;
+        }
+        break;
+
+      case "katz_centrality":
+        f = function(j){
+          graph.katz_centrality = j;
+        }
+        break;
+
+      case "flow_hierarchy":
+        f = function(j){
+          graph.flow_hierarchy = j.flow_hierarchy;
+        }
+        break;
+
+      case "clustering_coefficient":
+        f = function(j){
+          graph.clustering_coeff = j;
+        }
+        break;
+
+      case "average_clustering_coefficient":
+        f = function(j){
+          graph.average_clustering_coeff = j;
         }
         break;
 
@@ -483,9 +527,9 @@ window.onload = function(){
         }
         break;
 
-      case "rich_club":
+      case "rich_club_coefficient":
         f = function(j){
-          // graph.rich_club_coef = j.rich_club_coef;
+          graph.rich_club_coeff = j;
         }
         break;
     }
@@ -589,21 +633,23 @@ window.onload = function(){
 
   function set_result_window(graph){
     DOM_result.innerHTML = "<div class='result_tab'> \
-      <p>Noeud: "+graph.nb_nodes+"</p> <p>Arcs: "+graph.nb_edges+"</p> <p>Longueur totale: "+graph.total_length+"</p> \
+      <p><span>Noeuds:</span> "+graph.nb_nodes+"</p> <p><span>Arcs:</span> "+graph.nb_edges+"</p> <p><span>Longueur totale:</span> "+graph.total_length+"</p> \
     </div> \
     <div class='result_tab'> \
-      <p>Diamètre: "+graph.diameter+"</p> <p>Rayon: "+graph.radius+"</p> <p>Composants connexes: "+graph.nb_connected_components+"</p> \
-    </div> \
-    <div class='result_tab'> <p class='big_result'>Densité: "+graph.density+"</p> \
-      <p class='small_result'>&#960: "+graph.pi+"</p> <p class='small_result'>&#951: "+graph.eta+"</p> <p class='small_result'>&#952: "+graph.theta+"</p> \
-      <p class='small_result'>&#945: "+graph.alpha+"</p ><p class='small_result'>&#946: "+graph.beta+"</p> <p class='small_result'>&#947: "+graph.gamma+"</p> \
+      <p><span>Diamètre:</span> "+graph.diameter+"</p> <p><span>Rayon:</span> "+graph.radius+"</p> <p><span>Composants connexes:</span> "+graph.nb_connected_components+"</p> \
     </div> \
     <div class='result_tab'> \
-      <p>Nombre cyclomatique: "+graph.cyclomatic+"</p> <p>Centralité</p> \
+      <p class='big_result'><span>Densité:</span> "+graph.density+"</p> \
+      <p class='small_result'><span>&#960:</span> "+graph.pi+"</p> <p class='small_result'><span>&#951:</span> "+graph.eta+"</p> <p class='small_result'><span>&#952:</span> "+graph.theta+"</p> \
+      <p class='small_result'><span>&#945:</span> "+graph.alpha+"</p ><p class='small_result'><span>&#946:</span> "+graph.beta+"</p> <p class='small_result'><span>&#947:</span> "+graph.gamma+"</p> \
     </div> \
     <div class='result_tab'> \
-      <p>Scale-Free: "+graph.scale_free+"</p> <p>Transitivité: "+graph.cluster_coef+"</p> \
-      <p>Plus courts chemin: "+graph.shortest_path+"</p> <p>Indice oligopolistique: "+graph.rich_club_coef+"</p> \
+      <p><span>Centralité</span> </p> \
+    </div> \
+    <div class='result_tab'> \
+      <p class='big_result'><span>Hiérarchie:</span> "+graph.flow_hierarchy+"</p> \
+      <p><span>Transitivité:</span> "+graph.clustering_coeff+"</p> <p><span>Transitivité (moyenne):</span> "+graph.average_clustering_coeff+"\
+      <p><span>Plus courts chemin:</span> "+graph.shortest_path+"</p> <p><span>Indice oligopolistique:</span> "+graph.rich_club_coeff+"</p> \
     </div>"
   }
 
