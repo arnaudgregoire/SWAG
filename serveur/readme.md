@@ -1,4 +1,4 @@
-# Serveur Node 
+# Serveur Node
 ## Présentation
 Le serveur Node.js permet de faire le lien entre le client et le python.
 Il réalise les opérations suivantes :
@@ -8,7 +8,7 @@ Il réalise les opérations suivantes :
  - Enregistrement du .zip coté serveur
  - Ouverture du .zip et enregistrement des données dézipées dans le dossier python.shp
  - Exécution de la commande python demandé par le client
- - Réception de la réponse python 
+ - Réception de la réponse python
  - Envoi de la réponse python au client
 
 ## Installation
@@ -16,7 +16,7 @@ Il réalise les opérations suivantes :
 Pour installer le node, ouvrez un invite de commande dans le dossier et tapez :
 
 ```sh
-$ npm install 
+$ npm install
 ```
 
 npm va installer dans un sous-dossier node-modules les modules suivants :
@@ -54,12 +54,24 @@ zip/1854_emprise.zip written.
 Extracted zip/1854_emprise.zip in folder python/shp.
 ```
 "basics" représente l'opération que le python doit réaliser.
-node exécute alors la commande correspondante et l'écrit dans la console :
+node exécute alors la commande correspondante et l'écrit dans la console
+### Exemples :
 ```sh
 python  python/swag.py  python//shp//1854_emprise.shp basics
 ```
-ou bien encore :
 ```sh
 python  python/swag.py  python//shp//1854_emprise.shp average_shortest_path_length
 ```
 
+Le serveur écrit ensuite le retour que lui a envoyé python
+### Exemples :
+```sh
+{"basics":{"nb_nodes" : 3205, "nb_edges" : 5073, "total_length" : 504332}}
+```
+```sh
+{"average_shortest_path_length" : 3037.9637242716376}
+```
+Une fois que le serveur a envoyé le retour python au client, il affiche :
+```sh
+envoi des données au client
+```
