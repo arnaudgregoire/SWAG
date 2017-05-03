@@ -14,7 +14,6 @@
 
 	<script type="text/javascript" src="dist/jszip.min.js"></script>
 	<script type="text/javascript" src="dist/shp.min.js"></script>
-	<script type="text/javascript" src="dist/pixel-jump.min.js"></script>
 	<script type="text/javascript" src="dist/script.js"></script>
 	<title>Projet</title>
 </head>
@@ -60,8 +59,8 @@
 				<p>Organisation</p>
 				<div>
 					<input type='radio' name='operation' value='density' id='density'><label for='density'>Densité</label>
-					<input type='radio' name='operation' value='index_pi_eta_theta' id='index1'><label for='index1'>Indices &#960,&#951, &#952</label>
-					<input type='radio' name='operation' value='index_alpha_beta_gamma' id='index2'><label for='index2'>Index &#945,&#946,&#947</label>
+					<input type='radio' name='operation' value='index_pi_eta' id='index1'><label for='index1'>Indices &#960, &#951</label>
+					<input type='radio' name='operation' value='index_alpha_beta_gamma' id='index2'><label for='index2'>Index &#945, &#946, &#947</label>
 				</div>
 			</div>
 
@@ -69,21 +68,21 @@
 				<p>Centralité</p>
 				<div>
 					<!-- <input type='radio' name='operation' value='cyclo' id='cyclo'><label for='cyclo'>Nombre Cyclomatique</label> -->
-					<input type='radio' name='operation' value='degree_centrality' id='degree_centrality'><label for='degree_centrality'>Centralité (degré)</label>
-					<input type='radio' name='operation' value='closeness_centrality' id='closeness_centrality'><label for='closeness_centrality'>Centralité (proximité)</label>
-					<input type='radio' name='operation' value='betweenness_centrality' id='betweenness_centrality'><label for='betweenness_centrality'>Centralité (intermédiarité)</label>
-					<input type='radio' name='operation' value='eigenvector_centrality' id='eigenvector_centrality'><label for='eigenvector_centrality'>Centralité (vecteur propre)</label>
-					<input type='radio' name='operation' value='katz_centrality' id='katz_centrality'><label for='katz_centrality'>Centralité (Katz)</label>
+					<input type='radio' name='operation' value='degree_centrality' id='degree_centrality'><label for='degree_centrality'>Degré</label>
+					<input type='radio' name='operation' value='closeness_centrality' id='closeness_centrality'><label for='closeness_centrality'>Proximité</label>
+					<input type='radio' name='operation' value='betweenness_centrality' id='betweenness_centrality'><label for='betweenness_centrality'>Intermédiaire</label>
+					<input type='radio' name='operation' value='eigenvector_centrality' id='eigenvector_centrality'><label for='eigenvector_centrality'>Vecteur Propre</label>
+					<input type='radio' name='operation' value='katz_centrality' id='katz_centrality'><label for='katz_centrality'>Katz</label>
 				</div>
 			</div>
 
 			<div class="drop_down">
 				<p>Structure</p>
 				<div>
-					<input type='radio' name='operation' value='flow_hierarchy' id='flow_hierarchy'><label for='flow_hierarchy'>Hiérarchie</label>
-					<input type='radio' name='operation' value='clustering_coefficient' id='clustering_coefficient'><label for='clustering_coefficient'>Clustering</label>
-					<input type='radio' name='operation' value='average_clustering_coefficient' id='average_clustering_coefficient'><label for='average_clustering_coefficient'>Clustering (moyen)</label>
-					<input type='radio' name='operation' value='average_shortest_path_length' id='average_shortest_path_length'><label for='average_shortest_path_length'>Plus Courts Chemins</label>
+					<!-- <input type='radio' name='operation' value='flow_hierarchy' id='flow_hierarchy'><label for='flow_hierarchy'>Hiérarchie</label> -->
+					<input type='radio' name='operation' value='clustering_coefficient' id='clustering'><label for='clustering'>Clustering</label>
+					<input type='radio' name='operation' value='average_clustering_coefficient' id='average_clustering'><label for='average_clustering'>Clustering (moyen)</label>
+					<input type='radio' name='operation' value='average_shortest_path_length' id='shortest_path_length'><label for='shortest_path_length'>Plus Courts Chemins</label>
 					<input type='radio' name='operation' value='rich_club_coefficient' id='rich_club_coefficient'><label for='rich_club_coefficient'>Indice Oligopolistique</label>
 				</div>
 			</div>
