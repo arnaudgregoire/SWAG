@@ -120,7 +120,13 @@ window.onload = function(){
   var DOM_map_button = document.getElementById("map_button");
   var DOM_operation_list = document.getElementsByName("operation");
   var DOM_window_action = document.getElementsByClassName("window")[0];
+
   var DOM_result = document.getElementById("result_content");
+  var DOM_result_tabs = document.getElementById("result_tabs");
+  var DOM_link_result_main = document.getElementById("link_result_main");
+  var DOM_link_result_centrality = document.getElementById("link_result_centrality");
+  var DOM_link_result_clustering = document.getElementById("link_result_clustering");
+
   var loader = document.getElementById("loader");
 
 /**
@@ -144,6 +150,25 @@ window.onload = function(){
     }
     DOM_window_action.addEventListener("click", toggle_result_window, false);
     busy = false;
+
+    DOM_link_result_main.addEventListener('click', function(){
+      DOM_link_result_main.classList.add('selected');
+      DOM_link_result_centrality.classList.remove("selected");
+      DOM_link_result_clustering.classList.remove("selected");
+      DOM_result_tabs.style.marginLeft = "0";
+    });
+    DOM_link_result_centrality.addEventListener('click', function(){
+      DOM_link_result_centrality.classList.add('selected');
+      DOM_link_result_main.classList.remove("selected");
+      DOM_link_result_clustering.classList.remove("selected");
+      DOM_result_tabs.style.marginLeft = "-400px";
+    });
+    DOM_link_result_clustering.addEventListener('click', function(){
+      DOM_link_result_clustering.classList.add('selected');
+      DOM_link_result_main.classList.remove("selected");
+      DOM_link_result_centrality.classList.remove("selected");
+      DOM_result_tabs.style.marginLeft = "-800px";
+    });
 
     music = new Audio("dist/audio1.mp3");
     music.loop = true;
@@ -304,6 +329,8 @@ window.onload = function(){
 
     set_result_window(graph);
   }
+
+
 
 /**
 * @function
@@ -549,23 +576,100 @@ window.onload = function(){
     return f;
   }
 
+  /**
+  * @function
+  * @name text_to_json
+  * @description Convertit un dictionnaire de noeud python, au format texte, en String qui peut être parsé en objet json
+  * @param {String} text - Le texte de retour d'une requête AJAX
+  * @returns {String}
+  */
   function text_to_json(text){
     var t = text.substring(1,text.length-2);
     var liste = t.split("(");
 
-    var result = '{"nodes": [';
-    var node,coord,x,y,value;
+    // Recherche des valeurs max et min, ainsi que du nombre de valeurs différentes
+    var node, value_list = [], value;
+    var max = 0; var min = 9999;
     for(var i=1; i<liste.length; i++){
       node = liste[i].split(":");
       value = parseFloat(node[1]);
+      value_list.push(value);
+
+      if(value > max){ max = value; }
+      if(value < min){ min = value; }
+    }
+
+    var true_color = true;
+    var color_list = [];
+    var unique = value_list.filter(function(v,i,self){ return self.indexOf(v) === i; });
+
+    // Dans le cas d'un faible nombre de valeurs, ont créé une liste de couleur à appliquer pour plus de visibilité
+    if(unique.length <= 10){
+      unique = unique.map(function(x){ return (x-min)/(max-min); }); // normalisation des valeurs
+      unique.sort();    // tris des valeurs
+      true_color = false;
+
+      var step, rgb;
+      for(var i=0; i<unique.length; i++){
+        step = i / (unique.length-1);
+        rgb = color_map(step);
+        color_list.push( "rgb("+String(rgb[0])+","+String(rgb[1])+","+String(rgb[2])+")" );    // création de la liste des couleurs disponible
+      }
+      console.log(color_list);
+    }
+
+    var result = '{"nodes": [';
+    var coord, x, y, rgb, color;
+    for(var i=1; i<liste.length; i++){
+      node = liste[i].split(":");
+      value = (parseFloat(node[1]) - min) / (max - min);
+
+      if(true_color){
+        rgb = color_map(value)
+        color = "rgb("+String(rgb[0])+","+String(rgb[1])+","+String(rgb[2])+")";
+      }
+      else{
+        color = color_list[unique.indexOf(value)];
+      }
+
       coord = node[0].split(",");
-      x = parseFloat(coord[0]); y = parseFloat(coord[1]);
-      result += '{"id": ' + String(i-1) + ', "x": ' + String(x) + ', "y": ' + String(y) + ', "value": ' + String(value) + '},';
+      x = parseFloat(coord[0]);
+      y = parseFloat(coord[1]);
+
+      result += '{"id": ' + String(i-1) + ', "x": ' + String(x) + ', "y": ' + String(y) + ', "color": "' + color + '"},';
     }
 
     result = result.substring(0,result.length-1) + "]}";
     return result;
   }
+
+  function color_map(value){
+    var r,g,b;
+    if(value <= 0.25){
+      r = 0;
+      g = 255 * value*4;
+      b = 255;
+    }
+    else if(value <= 0.5){
+      r = 0;
+      g = 255;
+      b = 255 * (1 - (value-0.25)*4);
+    }
+    else if(value <= 0.75){
+      r = 255 * (value-0.5)*4;
+      g = 255;
+      b = 0;
+    }
+    else{
+      r = 255;
+      g = 255 * (1 - (value-0.75)*4);
+      b = 0;
+    }
+    return [r,g,b];
+  }
+
+
+
 
   function set_file_window(){
     var div = document.querySelector("#file_wrap .content");
@@ -599,7 +703,7 @@ window.onload = function(){
     }
     else{
       div.innerHTML = "<p class='no_file'>No file uploaded</p>";
-      DOM_result.innerHTML = "";
+      DOM_result_tabs.innerHTML = "";
     }
   }
 
@@ -632,7 +736,7 @@ window.onload = function(){
       map.eachLayer(function(layer) {
         if(layer != map_raster){ map.removeLayer(layer); }
       });
-      DOM_result.innerHTML = "";
+      DOM_result_tabs.innerHTML = "";
     }
 
     graph_list.splice(id,1);
@@ -658,22 +762,22 @@ window.onload = function(){
       DOM_window_action.classList.remove("fa-window-maximize");
       DOM_window_action.classList.add("fa-window-minimize");
 
-      DOM_result.style.height = "300px";
+      DOM_result.style.height = "380px";
     }
   }
 
   function set_result_window(graph){
-    DOM_result.innerHTML = "<div class='result_tab'> \
+    DOM_result_tabs.innerHTML = "<div><div class='result_section'> \
       <p><span>Noeuds:</span> "+graph.nb_nodes+"</p> \
       <p><span>Arcs:</span> "+graph.nb_edges+"</p> \
       <p><span>Longueur totale:</span> "+graph.total_length+"</p> \
     </div> \
-    <div class='result_tab'> \
+    <div class='result_section'> \
       <p><span>Diamètre:</span> "+graph.diameter+"</p> \
       <p><span>Rayon:</span> "+graph.radius+"</p> \
       <p><span>Composantes connexes:</span> "+graph.nb_connected_components+"</p> \
     </div> \
-    <div class='result_tab'> \
+    <div class='result_section'> \
       <p class='big_result'><span>Densité:</span> "+graph.density+"</p> \
       <p class='small_result'><span>&#960:</span> "+graph.pi+"</p> \
       <p><span>&#951:</span> "+graph.eta+"</p> \
@@ -681,11 +785,72 @@ window.onload = function(){
       <p class='small_result'><span>&#946:</span> "+graph.beta+"</p> \
       <p class='small_result'><span>&#947:</span> "+graph.gamma+"</p> \
     </div> \
-    <div class='result_tab'> \
-      <p><span>Nombre cylomatique:</span> "+graph.cyclomatic_number+"\
-      <p><span>Transitivité moyenne:</span> "+graph.average_clustering_coeff+"\
-      <p><span>Plus courts chemin:</span> "+graph.shortest_path+"</p> \
-    </div>"
+    <div class='result_section'> \
+      <p><span>Nombre cylomatique:</span> "+graph.cyclomatic_number+"</p>\
+      <p><span>Plus courts chemin moyen:</span> "+graph.shortest_path+"</p> \
+    </div></div> \
+    <div> \
+      <div class='result_section'> <p><span>Degré</span></p> \
+        <div class='graph_visu' id='result_degree_centrality'></div> </div> \
+      <div class='result_section'> <p><span>Proximité</span></p> \
+        <div class='graph_visu' id='result_closeness_centrality'></div> </div> \
+      <div class='result_section'> <p><span>Intermédiaire</span></p> \
+        <div class='graph_visu' id='result_betweenness_centrality'></div> </div> \
+      <div class='result_section'> <p><span>Vecteur Propre</span></p> \
+        <div class='graph_visu' id='result_eigenvector_centrality'></div> </div> \
+      <div class='result_section'> <p><span>Katz</span></p> \
+        <div class='graph_visu' id='result_katz_centrality'></div> </div> \
+    </div> \
+    <div> \
+      <div class='result_section'> \
+        <p><span>Clustering moyen:</span> "+graph.average_clustering_coeff+"</p> \
+        <div class='graph_visu' id='result_clustering_coeff'></div> \
+      </div> \
+    </div>";
+
+    set_graph_visualization(graph);
+  }
+
+  function set_graph_visualization(graph){
+    var nodes, edges, container, data;
+    var options = {physics: {enabled: false}, interaction: {dragNodes: false, hover: false, selectable: false}};
+
+    if(graph.degree_centrality != ""){
+      console.log(graph.degree_centrality);
+      container = document.getElementById("result_degree_centrality");
+      data = {nodes: new vis.DataSet(graph.degree_centrality.nodes), edges: new vis.DataSet([])};
+      var network_degree = new vis.Network(container, data, options);
+    }
+
+    if(graph.closeness_centrality != ""){
+      container = document.getElementById("result_closeness_centrality");
+      data = {nodes: new vis.DataSet(graph.closeness_centrality.nodes), edges: new vis.DataSet([])};
+      var network_centrality = new vis.Network(container, data, options);
+    }
+
+    if(graph.betweenness_centrality != ""){
+      container = document.getElementById("result_betweenness_centrality");
+      data = {nodes: new vis.DataSet(graph.betweenness_centrality.nodes), edges: new vis.DataSet([])};
+      var network_betweenness = new vis.Network(container, data, options);
+    }
+
+    if(graph.eigenvector_centrality != ""){
+      container = document.getElementById("result_eigenvector_centrality");
+      data = {nodes: new vis.DataSet(graph.eigenvector_centrality.nodes), edges: new vis.DataSet([])};
+      var network_eigenvector = new vis.Network(container, data, options);
+    }
+
+    if(graph.katz_centrality != ""){
+      container = document.getElementById("result_katz_centrality");
+      data = {nodes: new vis.DataSet(graph.katz_centrality.nodes), edges: new vis.DataSet([])};
+      var network_katz_centrality = new vis.Network(container, data, options);
+    }
+
+    if(graph.clustering_coeff != ""){
+      container = document.getElementById("result_clustering_coeff");
+      data = {nodes: new vis.DataSet(graph.clustering_coeff.nodes), edges: new vis.DataSet([])};
+      var network_clustering_coeff = new vis.Network(container, data, options);
+    }
   }
 
 /**
