@@ -17,7 +17,7 @@ shapefile = sys.argv[1]
 
 nomMethode = sys.argv[2]
 
-#nomMethode = "basics"
+#nomMethode = "closeness_centrality"
 
 
 
@@ -260,70 +260,76 @@ def main(shapefile, nomMethode):
         - average_clustering_coefficient
     """
     
-    # Prétraitement du shp (création et calcul de la colonne LENGTH)
-    set_shp(shapefile)
+    try:
+        
     
-    # Transformation du shapefile en graphe
-    G2 = nx.read_shp(shapefile)
-
-    # On rend le graphe non-orienté
-    G = G2.to_undirected()
-    # print("coool",G.is_directed())
-
-    #nx.draw_networkx(G)
+        # Prétraitement du shp (création et calcul de la colonne LENGTH)
+        set_shp(shapefile)
+        
+        # Transformation du shapefile en graphe
+        G2 = nx.read_shp(shapefile)
     
-    #print(G.edges(data=True)[0])
-
-    if nomMethode == "basics":
-        fun_basics(G)
-
-    elif nomMethode == "diameter":
-        fun_diameter(G)
-
-    elif nomMethode == "radius":
-        fun_radius(G)
-
-    elif nomMethode == "number_connected_component":
-        fun_number_connected_component(G)
-
-    elif nomMethode == "density":
-        fun_density(G)
-
-    elif nomMethode == "index_alpha_beta_gamma":
-        fun_index_alpha_beta_gamma(G)
-        
-    elif nomMethode == "index_pi_eta_theta":
-        fun_index_pi_eta(G)
-        
-    elif nomMethode == "degree_centrality":
-        fun_degree_centrality(G)
+        # On rend le graphe non-orienté
+        G = G2.to_undirected()
+        # print("coool",G.is_directed())
     
-    elif nomMethode == "closeness_centrality":
-        fun_closeness_centrality(G,"LENGTH")
+        #nx.draw_networkx(G)
+        
+        #print(G.edges(data=True)[0])
     
-    elif nomMethode == "betweenness_centrality":
-        fun_betweenness_centrality(G,"LENGTH")
-        
-    elif nomMethode == "eigenvector_centrality":
-        fun_eigenvector_centrality(G,"LENGTH")
-        
-    elif nomMethode == "katz_centrality":
-        fun_katz_centrality(G,"LENGTH")
-        
-    elif nomMethode == "clustering_coefficient":
-        fun_clustering_coefficient(G,"LENGTH")
-        
-    elif nomMethode == "average_clustering_coefficient":
-        fun_average_clustering_coefficient(G,"LENGTH")
-        
-    elif nomMethode == "cyclomatic_number":
-        fun_cyclomatic_number(G)
+        if nomMethode == "basics":
+            fun_basics(G)
     
-    elif nomMethode == "average_shortest_path_length":
-        fun_average_shortest_path_length(G,"LENGTH")
+        elif nomMethode == "diameter":
+            fun_diameter(G)
+    
+        elif nomMethode == "radius":
+            fun_radius(G)
+    
+        elif nomMethode == "number_connected_component":
+            fun_number_connected_component(G)
+    
+        elif nomMethode == "density":
+            fun_density(G)
+    
+        elif nomMethode == "index_alpha_beta_gamma":
+            fun_index_alpha_beta_gamma(G)
+            
+        elif nomMethode == "index_pi_eta_theta":
+            fun_index_pi_eta(G)
+            
+        elif nomMethode == "degree_centrality":
+            fun_degree_centrality(G)
         
-    else :
-        print("nom de méthode non défini")
+        elif nomMethode == "closeness_centrality":
+            fun_closeness_centrality(G,"LENGTH")
+        
+        elif nomMethode == "betweenness_centrality":
+            fun_betweenness_centrality(G,"LENGTH")
+            
+        elif nomMethode == "eigenvector_centrality":
+            fun_eigenvector_centrality(G,"LENGTH")
+            
+        elif nomMethode == "katz_centrality":
+            fun_katz_centrality(G,"LENGTH")
+            
+        elif nomMethode == "clustering_coefficient":
+            fun_clustering_coefficient(G,"LENGTH")
+            
+        elif nomMethode == "average_clustering_coefficient":
+            fun_average_clustering_coefficient(G,"LENGTH")
+            
+        elif nomMethode == "cyclomatic_number":
+            fun_cyclomatic_number(G)
+        
+        elif nomMethode == "average_shortest_path_length":
+            fun_average_shortest_path_length(G,"LENGTH")
+            
+        else :
+            print("nom de méthode non défini")
+    
+    except:
+        print("erreur")
 
 
 #/////////////////////////////////////////////////////////////////////
