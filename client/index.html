@@ -3,19 +3,23 @@
 <head>
 	<meta charset="UTF-8">
 	<meta  name="Author" content="The AAA Team">
-	<meta name="Description" content="Outil de visualisation et analyse de fichier SHP - Utilisation de NetworkX pour réaliser des calculs de graphe">
+	<meta name="Description" content="S.W.A.G est un outil de visualisation et analyse de graphes spatiaux au format SHP - Utilise NetworkX pour réaliser les calculs de graphe">
 	<meta name="Keywords" content="graph,graphe,shapefile,shp,dbf,preview">
-	<!-- <link rel="shortcut icon" href="favicon.ico"> -->
+	<link rel="shortcut icon" href="dist/favicon.png">
+
 	<link rel="stylesheet" href="style.css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
 	<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.min.css" />
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.min.js"></script>
+
 	<script type="text/javascript" src="dist/jszip.min.js"></script>
 	<script type="text/javascript" src="dist/shp.min.js"></script>
 	<script type="text/javascript" src="dist/script.js"></script>
-	<title>Projet</title>
+	<title>Service Web d'Analyse de Graphe - S.W.A.G</title>
 </head>
 
 <body>
@@ -67,7 +71,6 @@
 			<div class="drop_down">
 				<p>Centralité</p>
 				<div>
-					<!-- <input type='radio' name='operation' value='cyclo' id='cyclo'><label for='cyclo'>Nombre Cyclomatique</label> -->
 					<input type='radio' name='operation' value='degree_centrality' id='degree_centrality'><label for='degree_centrality'>Degré</label>
 					<input type='radio' name='operation' value='closeness_centrality' id='closeness_centrality'><label for='closeness_centrality'>Proximité</label>
 					<input type='radio' name='operation' value='betweenness_centrality' id='betweenness_centrality'><label for='betweenness_centrality'>Intermédiaire</label>
@@ -79,7 +82,7 @@
 			<div class="drop_down">
 				<p>Structure</p>
 				<div>
-					<!-- <input type='radio' name='operation' value='flow_hierarchy' id='flow_hierarchy'><label for='flow_hierarchy'>Hiérarchie</label> -->
+					<input type='radio' name='operation' value='cyclomatic_number' id='cyclo'><label for='cyclo'>Nombre Cyclomatique</label>
 					<input type='radio' name='operation' value='clustering_coefficient' id='clustering'><label for='clustering'>Clustering</label>
 					<input type='radio' name='operation' value='average_clustering_coefficient' id='average_clustering'><label for='average_clustering'>Clustering (moyen)</label>
 					<input type='radio' name='operation' value='average_shortest_path_length' id='shortest_path_length'><label for='shortest_path_length'>Plus Courts Chemins</label>
@@ -92,31 +95,44 @@
 	<div id="result_wrap">
 		<p class=title>Résultat <i class="window fa fa-window-maximize"></i></p>
 		<div id="result_content">
-			<!-- <div class='result_tab'>
-				<p>Noeud: 0</p>
-				<p>Arcs: 0</p>
-				<p>Longueur totale: 0</p>
+			<div id="result_tab_name">
+				<p id="link_result_main" class="selected">Général</p><p id="link_result_centrality">Centralité</p><p id="link_result_clustering">Clustering</p>
 			</div>
-			<div class='result_tab'>
-				<p>Diamètre: 0</p>
-				<p>Rayon: 0</p>
-				<p>Composants connexes: 0</p>
+			<div id="result_tabs">
+				<!-- <div>
+					<div class='result_section'>
+						<p>Noeud: 0</p>
+						<p>Arcs: 0</p>
+						<p>Longueur totale: 0</p>
+					</div>
+					<div class='result_section'>
+						<p>Diamètre: 0</p>
+						<p>Rayon: 0</p>
+						<p>Composants connexes: 0</p>
+					</div>
+					<div class='result_section'>
+						<p class='big_result'>Densité: 0</p>
+						<p class='small_result'>&#960: 0</p> <p class='small_result'>&#951: 0</p> <p class='small_result'>&#952: 0</p>
+						<p class='small_result'>&#945: 0</p ><p class='small_result'>&#946: 0</p> <p class='small_result'>&#947: 0</p>
+					</div>
+					<div class='result_section'>
+						<p>Nombre cyclomatique: 0</p>
+						<p>Centralité</p>
+					</div>
+					<div class='result_section'>
+						<p>Scale-Free: 0</p>
+						<p>Transitivité: 0</p>
+						<p>Plus courts chemin: 0</p>
+						<p>Indice oligopolistique: 0</p>
+					</div>
+				</div>
+				<div>
+					<p>Centralité</p>
+				</div>
+				<div>
+					<p>Clustering</p>
+				</div> -->
 			</div>
-			<div class='result_tab'>
-				<p class='big_result'>Densité: 0</p>
-				<p class='small_result'>&#960: 0</p> <p class='small_result'>&#951: 0</p> <p class='small_result'>&#952: 0</p>
-				<p class='small_result'>&#945: 0</p ><p class='small_result'>&#946: 0</p> <p class='small_result'>&#947: 0</p>
-			</div>
-			<div class='result_tab'>
-				<p>Nombre cyclomatique: 0</p>
-				<p>Centralité</p>
-			</div>
-			<div class='result_tab'>
-				<p>Scale-Free: 0</p>
-				<p>Transitivité: 0</p>
-				<p>Plus courts chemin: 0</p>
-				<p>Indice oligopolistique: 0</p>
-			</div> -->
 		</div>
 	</div>
 
