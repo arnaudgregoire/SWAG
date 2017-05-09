@@ -50,8 +50,7 @@ app.post('/',upload.single('zip'), function (req, res, next) {
   /**
   * @function
   * @name python_call
-  * @description Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
-  * @param data {Uint8Array} - Le contenu du .zip transmis par le client
+  * @description Exécution d'une ligne de commande et envoi du retour au client
   * @param name {name} - le nom du zip/fichier envoyé par le client
   * @param operation {string} - Le nom de l'opération demandé par le client
   */
@@ -73,7 +72,7 @@ app.post('/',upload.single('zip'), function (req, res, next) {
 /**
 * @function
 * @name save
-* @description Fonction de sauvegarde du .zip sur le serveur & des fichiers shp & co associé
+* @description Fonction de sauvegarde du .zip sur le serveur, elle fait ensuite appel aux fonctions dezip & python_call
 * @param data {Uint8Array} - Le contenu du .zip transmis par le client
 * @param name {name} - le nom du zip/fichier envoyé par le client
 * @param operation {string} - Le nom de l'opération demandé par le client

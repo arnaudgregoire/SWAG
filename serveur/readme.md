@@ -12,15 +12,21 @@ Il réalise les opérations suivantes :
  - Envoi de la réponse python au client
 
 ## Installation
+
+Veuillez télécharger et installer node à l'adresse suivante :
+
+https://nodejs.org/en/
+
 Si vous travaillez derrière un proxy (comme à l'ENSG), ouvrez un invite de commande pour configurer le proxy :
 ```sh
 npm config set proxy http://10.0.4.2:3128
 npm config set https-proxy http://10.0.4.2:3128
 ```
 
-Pour installer le node, ouvrez un invite de commande dans le dossier et tapez :
+Pour installer le node, ouvrez un invite de commande dans le dossier SWAG et tapez :
 
 ```sh
+$ cd serveur
 $ npm install
 ```
 
