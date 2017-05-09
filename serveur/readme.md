@@ -12,6 +12,11 @@ Il réalise les opérations suivantes :
  - Envoi de la réponse python au client
 
 ## Installation
+
+Veuillez télécharger et installer node à l'adresse suivante :
+
+https://nodejs.org/en/
+
 Si vous travaillez derrière un proxy (comme à l'ENSG), ouvrez un invite de commande pour configurer le proxy :
 ```sh
 npm config set proxy http://10.0.4.2:3128
