@@ -344,10 +344,13 @@ window.onload = function(){
     loader.style.display = "block";
     music.play();
 
+    var optionAll = document.getElementById("import_opt").checked;
+    var operation = optionAll ? 'all' : 'basics';
+
     var form = new FormData();
     form.append('zip',graph.zip_uint8array);
     form.append('name',graph.name);
-    form.append('operation','basics');
+    form.append('operation',operation);
     form.append('options', '');
     // console.log(form);
 
@@ -355,19 +358,38 @@ window.onload = function(){
     xhr.open("POST", "http://127.0.0.1:8080/", true);
 
     // Les écouteurs d'évènements permettent d'animer une barre de chargement
-    xhr.onprogress = function(e){
-      if(e.lengthComputable){ }
-    };
-    xhr.onloadstart = function(e){ };
-    xhr.onloadend = function(e) { };
+    // xhr.onprogress = function(e){
+    //   if(e.lengthComputable){ }
+    // };
+    // xhr.onloadstart = function(e){ };
+    // xhr.onloadend = function(e) { };
 
     xhr.onreadystatechange = function(){
       if(xhr.readyState == 4 && xhr.status == 200){
         console.log(xhr.responseText);
         var json = JSON.parse(xhr.responseText);
-        graph.nb_nodes = json.basics.nb_nodes;
-        graph.nb_edges = json.basics.nb_edges;
-        graph.total_length = json.basics.total_length;
+
+        if(optionAll){
+          graph.nb_nodes = json.basics.nb_nodes;
+          graph.nb_edges = json.basics.nb_edges;
+          graph.total_length = json.basics.total_length;
+          graph.diameter = json.diameter;
+          graph.radius = json.radius;
+          graph.nb_connected_components = json.number_connected_components;
+          graph.density = parseFloat(json.density).toPrecision(5);
+          graph.pi = parseFloat(json.index_pi_eta_theta.pi).toPrecision(5);
+          graph.eta = parseFloat(json.index_pi_eta_theta.eta).toPrecision(5);
+          graph.alpha = parseFloat(json.index_alpha_beta_gamma.alpha).toPrecision(5);
+          graph.beta = parseFloat(json.index_alpha_beta_gamma.beta).toPrecision(5);
+          graph.gamma = parseFloat(json.index_alpha_beta_gamma.gamma).toPrecision(5);
+          graph.cyclomatic_number = json.cyclomatic_number;
+          graph.shortest_path = parseFloat(json.average_shortest_path_length).toPrecision(8);
+        }
+        else{
+          graph.nb_nodes = json.basics.nb_nodes;
+          graph.nb_edges = json.basics.nb_edges;
+          graph.total_length = json.basics.total_length;
+        }
 
         set_result_window(graph);
         if(DOM_window_action.classList.contains("fa-window-maximize")){
