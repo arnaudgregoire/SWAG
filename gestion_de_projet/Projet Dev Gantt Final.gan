@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Projet Dev Gantt Project" company="" webLink="http://" view-date="2017-04-19" view-index="0" gantt-divider-location="346" resource-divider-location="300" version="2.8.4" locale="fr_FR">
+<?xml version="1.0" encoding="UTF-8"?><project name="Projet Dev Gantt Project" company="" webLink="http://" view-date="2017-03-27" view-index="0" gantt-divider-location="480" resource-divider-location="300" version="2.8.4" locale="fr_FR">
     <description/>
-    <view zooming-state="default:0" id="gantt-chart">
-        <field id="tpd3" name="Nom" width="188" order="0"/>
-        <field id="tpd4" name="Date de début" width="77" order="1"/>
-        <field id="tpd5" name="Date de fin" width="77" order="2"/>
-        <option id="color.recent"><![CDATA[#66cc00 #cc0000 #cc9900 #f4f4f4]]></option>
+    <view zooming-state="default:5" id="gantt-chart">
+        <field id="tpd3" name="Nom" width="233" order="0"/>
+        <field id="tpd4" name="Date de début" width="122" order="1"/>
+        <field id="tpd5" name="Date de fin" width="121" order="2"/>
+        <option id="color.recent"><![CDATA[#ff0000 #66cc00 #cc0000 #cc9900 #f4f4f4]]></option>
     </view>
     <view id="resource-table">
         <field id="0" name="Nom" width="210" order="0"/>
@@ -38,19 +38,20 @@
         <task id="1" name="Prise en main 1" meeting="false" start="2017-02-08" duration="3" complete="0" expand="true"/>
         <task id="19" name="Prise en main 2" meeting="false" start="2017-02-20" duration="3" complete="0" expand="true"/>
         <task id="2" name="Réalisation du diagramme de Gantt" color="#66cc00" meeting="false" start="2017-02-22" duration="6" complete="0" expand="true"/>
-        <task id="4" name="Mise en place du serveur Apache" color="#cc9900" meeting="false" start="2017-02-22" duration="11" complete="0" expand="true"/>
-        <task id="8" name="Gestion de l'upload des shapefiles et des requêts ajax" color="#cc0000" meeting="false" start="2017-02-22" duration="11" complete="0" expand="true"/>
+        <task id="4" name="Mise en place du serveur Node" color="#cc9900" meeting="false" start="2017-02-22" duration="11" complete="0" expand="true"/>
+        <task id="8" name="Gestion de l'upload des shapefiles et des requêts ajax" color="#cc0000" meeting="false" start="2017-02-23" duration="7" complete="0" expand="true"/>
         <task id="3" name="Premier script python" color="#66cc00" meeting="false" start="2017-02-22" duration="6" complete="0" expand="true"/>
-        <task id="10" name="Rendu graphique" color="#cc0000" meeting="false" start="2017-03-01" duration="11" complete="0" expand="true"/>
+        <task id="10" name="Création de l'interface" color="#cc0000" meeting="false" start="2017-03-06" duration="12" complete="0" expand="true"/>
         <task id="6" name="Prise en main de NetworkX" color="#66cc00" meeting="false" start="2017-03-01" duration="11" complete="0" expand="true"/>
-        <task id="5" name="Script php" color="#cc9900" meeting="false" start="2017-03-08" duration="16" complete="0" expand="true"/>
-        <task id="11" name="Mise au point de l'interface" color="#cc0000" meeting="false" start="2017-03-15" duration="11" complete="0" expand="true"/>
+        <task id="5" name="Documentation script Node" color="#cc9900" meeting="false" start="2017-03-09" duration="15" complete="0" expand="true"/>
+        <task id="11" name="Stockage des données côté clients" color="#cc0000" meeting="false" start="2017-03-22" duration="6" complete="0" expand="true"/>
         <task id="20" name="tâche_20" color="#66cc00" meeting="false" start="2017-03-16" duration="10" complete="0" expand="true"/>
         <task id="18" name="Gestion de projet (RDV avec Patricia)" meeting="false" start="2017-04-25" duration="2" complete="0" expand="true"/>
         <task id="7" name="Dévellopement de nouvelles fonctionnalités" color="#66cc00" meeting="false" start="2017-04-19" duration="11" complete="0" expand="true"/>
-        <task id="9" name="Ajout de nouvelles fonctionnalités" color="#cc9900" meeting="false" start="2017-04-19" duration="11" complete="0" expand="true"/>
-        <task id="12" name="Affichage graphique client" color="#cc0000" meeting="false" start="2017-04-19" duration="11" complete="0" expand="true"/>
-        <task id="13" name="Documentation des scripts" meeting="false" start="2017-05-03" duration="9" complete="0" expand="true"/>
+        <task id="9" name="Corrections de bugs mineures" color="#cc9900" meeting="false" start="2017-04-19" duration="11" complete="0" expand="true"/>
+        <task id="12" name="Gestion de l'upload de plusieurs graphes" color="#cc0000" meeting="false" start="2017-04-17" duration="6" complete="0" expand="true"/>
+        <task id="30" name="Affichage des centralités/clustering" color="#ff0000" meeting="false" start="2017-04-27" duration="7" complete="0" expand="true"/>
+        <task id="13" name="Documentation des scripts" meeting="false" start="2017-05-04" duration="8" complete="0" expand="true"/>
         <task id="14" name="Préparation pour la présentation" meeting="false" start="2017-05-09" duration="5" complete="0" expand="true"/>
         <task id="15" name="Soutenance Projet" meeting="false" start="2017-05-15" duration="1" complete="0" expand="true"/>
     </tasks>
