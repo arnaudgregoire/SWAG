@@ -377,8 +377,8 @@ window.onload = function(){
           graph.radius = json.radius;
           graph.nb_connected_components = json.number_connected_components;
           graph.density = parseFloat(json.density).toPrecision(5);
-          graph.pi = parseFloat(json.index_pi_eta_theta.pi).toPrecision(5);
-          graph.eta = parseFloat(json.index_pi_eta_theta.eta).toPrecision(5);
+          graph.pi = parseFloat(json.index_pi_eta.pi).toPrecision(5);
+          graph.eta = parseFloat(json.index_pi_eta.eta).toPrecision(5);
           graph.alpha = parseFloat(json.index_alpha_beta_gamma.alpha).toPrecision(5);
           graph.beta = parseFloat(json.index_alpha_beta_gamma.beta).toPrecision(5);
           graph.gamma = parseFloat(json.index_alpha_beta_gamma.gamma).toPrecision(5);
@@ -518,8 +518,8 @@ window.onload = function(){
       case "index_pi_eta":
         f = function(text){
           var j = JSON.parse(text);
-          graph.pi = parseFloat(j.index_pi_eta_theta.pi).toPrecision(5);
-          graph.eta = parseFloat(j.index_pi_eta_theta.eta).toPrecision(5);
+          graph.pi = parseFloat(j.index_pi_eta.pi).toPrecision(5);
+          graph.eta = parseFloat(j.index_pi_eta.eta).toPrecision(5);
         }
         break;
 
