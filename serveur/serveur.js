@@ -55,10 +55,24 @@ app.post('/',upload.single('zip'), function (req, res, next) {
   * @param operation {string} - Le nom de l'opération demandé par le client
   */
 
+  // function python_call(name, operation) {
+  //   var result_json = ""
+  //   console.log('python ' + ' python/swag.py ' + ' python//shp//' + name + '.shp' + " " + operation );
+  //   const child = execFile('python', ['python/swag.py','python//shp//' + name + '.shp', operation ], (error, stdout, stderr) => {
+  //     if (error) {
+  //       throw error;
+  //     }
+  //     var result_json = stdout
+  //     console.log(result_json);
+  //     res.send(result_json)
+  //     console.log("envoi des données au client");
+  //   });
+  // }
+
   function python_call(name, operation) {
     var result_json = ""
     console.log('python ' + ' python/swag.py ' + ' python//shp//' + name + '.shp' + " " + operation );
-    const child = execFile('python', ['python/swag.py','python//shp//' + name + '.shp', operation ], (error, stdout, stderr) => {
+    const child = execFile('python', ['python/swag.py','python//shp//' + name + '.shp', operation ], function(error, stdout, stderr){
       if (error) {
         throw error;
       }
@@ -68,7 +82,6 @@ app.post('/',upload.single('zip'), function (req, res, next) {
       console.log("envoi des données au client");
     });
   }
-
 /**
 * @function
 * @name save
