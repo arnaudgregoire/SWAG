@@ -19,6 +19,7 @@ Il réalise les opérations suivantes :
 - average_shortest_path_length
 - clustering_coefficient
 - average_clustering_coefficient
+- all
 
 ## Installation
 
@@ -57,3 +58,10 @@ https://drive.google.com/open?id=0B_Lzmv9s5Z3TVVBGd3NHUGdYbms
   cd downloads
   pip install GDAL-2.1.3-cp36-cp36m-win_amd64.whl
   ```
+
+## Documentation utilisateur
+Pour aider l'utilisateur, les fonctions du script swag.py ont été documentées.
+La documentation est disponible :
+
+-  dans les commentaires du fichier swag.py
+-  dans le dossier doc sous la forme d'un fichier Markdown
