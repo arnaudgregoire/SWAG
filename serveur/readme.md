@@ -7,7 +7,7 @@ Il réalise les opérations suivantes :
  - Conversion de la chaine de caractère en .zip
  - Enregistrement du .zip coté serveur
  - Ouverture du .zip et enregistrement des données dézipées dans le dossier python.shp
- - Exécution de la commande python demandé par le client
+ - Exécution de la commande python demandée par le client
  - Réception de la réponse python
  - Envoi de la réponse python au client
 
