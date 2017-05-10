@@ -1,6 +1,6 @@
 # Documentation programmeur Script Python
 
-Ici sont documentés les différentes fonctions qui composent le script python
+Ici sont documentées les différentes fonctions qui composent le script python
 
 - fun_basics
 - fun_diameter
