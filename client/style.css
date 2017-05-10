@@ -22,7 +22,7 @@ html, body{
 
 #button_wrap{
   position: absolute;
-  bottom: 2%;
+  bottom: 3%;
   left: 50%;
   border: 1px solid rgba(0,0,0,0.3);
   transform: translate(-50%,0);
@@ -42,7 +42,6 @@ html, body{
   font-size: 1.2em;
   font-weight: bold;
   border-left: 5px solid #24a35a;
-  /*border-right: 2px solid #2e8f59;*/
   cursor: pointer;
   transition: all 0.15s;
   -webkit-transition: all 0.15s;
@@ -64,6 +63,51 @@ html, body{
   opacity: 0;
   cursor: pointer;
 }
+
+
+
+#import_opt_wrap{
+  position: absolute;
+  bottom: 3%;
+  left: calc(50% + 120px);
+  transform: translate(-50%,0);
+  -webkit-transform: translate(-50%,0);
+  z-index: 500;
+}
+
+#import_opt_wrap .popup i{
+  color: rgba(0, 0, 0, 0.5);
+}
+#import_opt_wrap:hover .popup, #import_opt_wrap:active .popup{
+  display: block;
+}
+
+#import_opt{
+  display: none;
+}
+#import_opt + label{
+  display: block;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: 4px solid #000;
+  border-radius: 5px;
+}
+#import_opt + label i{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #000;
+  opacity: 0;
+  transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%);
+  transition: all 0.15s;
+  -webkit-transition: all 0.15s;
+}
+#import_opt:checked + label i{ opacity: 1; }
 
 #file_wrap{
   position: absolute;
@@ -193,7 +237,7 @@ html, body{
 
 #result_wrap{
   position: absolute;
-  bottom: 4%;
+  bottom: 3%;
   right: 2%;
   width: 400px;
   background: #ffffff;
@@ -533,7 +577,7 @@ html, body{
   position: absolute;
   top: -20px;
   left: 50%;
-  width: 200px;
+  width: 230px;
   height: auto;
   padding: 12px;
   background: #fff;
@@ -542,6 +586,7 @@ html, body{
   -webkit-transform: translate(-50%,-100%);
   transition: all 0.3s;
   -webkit-transition: all 0.3s;
+  z-index: 10000;
 }
 .popup p{
   margin: 0;

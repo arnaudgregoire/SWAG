@@ -5,7 +5,7 @@
 	<meta  name="Author" content="The AAA Team">
 	<meta name="Description" content="S.W.A.G est un outil de visualisation et analyse de graphes spatiaux au format SHP - Utilise NetworkX pour réaliser les calculs de graphe">
 	<meta name="Keywords" content="graph,graphe,shapefile,shp,dbf,preview">
-	<link rel="shortcut icon" href="dist/favicon.png">
+	<link rel="shortcut icon" href="favicon.png">
 
 	<link rel="stylesheet" href="style.css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -19,7 +19,7 @@
 	<script type="text/javascript" src="dist/jszip.min.js"></script>
 	<script type="text/javascript" src="dist/shp.min.js"></script>
 	<script type="text/javascript" src="dist/script.js"></script>
-	<title>Service Web d'Analyse de Graphe - S.W.A.G</title>
+	<title>Service Web d'Analyse de Noeuds - S.W.A.N</title>
 </head>
 
 <body>
@@ -32,6 +32,18 @@
 
 		<div class="popup">
 			<p>Fichiers obligatoires: .shp, .dbf, .shx (.prj optionnel)</p>
+		</div>
+	</div>
+
+	<div id="import_opt_wrap">
+		<input id="import_opt" type="checkbox" />
+		<label for="import_opt">
+			<i class="fa fa-check fa-2x"></i>
+		</label>
+
+		<div class="popup">
+			<p>Calculer tous les résultats généraux</p>
+			<p> (<i class="fa fa-warning"></i> Temps de calcul long !)</p>
 		</div>
 	</div>
 
