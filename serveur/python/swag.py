@@ -17,7 +17,7 @@ shapefile = sys.argv[1]
 
 nomMethode = sys.argv[2]
 
-#nomMethode = "closeness_centrality"
+#nomMethode = "all"
 
 
 
@@ -44,10 +44,6 @@ def set_shp(shapefile):
 
     #Fermer le shp
     source = None
-
-
-
-
 
 
 #/////////////////////////////////////////////////////////////////////
@@ -106,6 +102,7 @@ def fun_density(G) :
 
     # Densité (Longueur du graphe rapporté à la surface de l'espace étudié)
     density = nx.density(G)
+
     s = '{"density" : ' + str(density) + '}'
     print(s)
 
@@ -207,6 +204,7 @@ def fun_clustering_coefficient(G,weight) :
 
     # Transitivité (Clustering coefficient)
     clustering_coefficient = nx.clustering(G,None,weight)
+
     s = clustering_coefficient
     print(s)
 
@@ -214,14 +212,79 @@ def fun_average_clustering_coefficient(G,weight):
 
     # Transitivité (average clustering coefficient)
     average_clustering_coefficient = nx.average_clustering(G,None,weight)
+
     s = average_clustering_coefficient
     print(s)
 
 def fun_average_shortest_path_length(G,weight=None) :
+
     # Longueur moyenne des plus courts chemin
     average_shortest_path_length = nx.average_shortest_path_length(G,weight)
+
     s = '{"average_shortest_path_length" : ' + str(average_shortest_path_length) + '}'
     print(s)
+
+def fun_all(G,weight):
+
+    # Nombres de sommets
+    v = nx.number_of_nodes(G)
+
+    # Nombres d'arcs
+    e = nx.number_of_edges(G)
+
+    # Longueur totale (somme des longueurs des arcs)
+    total_length = 0
+    list_edges = G.edges(data=True)
+    for edge in list_edges:
+        total_length += edge[-1]["LENGTH"]
+
+    # Diamètre
+    d = nx.diameter(G)
+
+    # Rayon
+    r = nx.radius(G)
+
+    # Nombres de composants connexes
+    p = nx.number_connected_components(G)
+
+    # Densité (Longueur du graphe rapporté à la surface de l'espace étudié)
+    density = nx.density(G)
+
+    # Indice "pi" (Longueur du graphe rapportée à la longueur du diamètre)
+    pi = total_length / d
+
+    # Indice "eta" (Longueur du graphe rapportée au nombre d'arcs)
+    eta = total_length / e
+
+    # Nombre cyclomatique (nombre maximum de cycles indépendants)
+    u = e - v + p
+
+    # Indice alpha (nombre de cycles sur le nombre de cycles maximum)
+    alpha = u / (2*v - 5)
+
+    # Indice beta (nombre d'arcs sur nombre de sommets)
+    beta = e / v
+
+    # Indice gamma (nombre d'arcs sur nombre maximum d'arcs possible)
+    gamma = e / (v - 2) / 3
+
+    # Longueur moyenne des plus courts chemin
+    average_shortest_path_length = nx.average_shortest_path_length(G,weight)
+
+    basics = '"basics":{"nb_nodes" : ' + str(v) + ', "nb_edges" : ' + str(e) + ', "total_length" : ' + str(round(total_length)) + '}'
+    diameter = '"diameter" : ' + str(d)
+    radius = '"radius" : ' + str(r)
+    number_connected_components = '"number_connected_components" : ' + str(p)
+    density = '"density" : ' + str(density)
+    index_pi_eta = '"index_pi_eta":{"pi" : ' + str(pi) + ', "eta" : ' + str(eta) + '}'
+    cyclomatic_number = '"cyclomatic_number":' + str(u)
+    index_alpha_beta_gamma = '"index_alpha_beta_gamma":{"alpha" : ' + str(alpha) + ', "beta" : ' + str(beta) + ', "gamma" : ' + str(gamma) + '}'
+    average_shortest_path_length = '"average_shortest_path_length" : ' + str(average_shortest_path_length)
+
+
+    s = '{' + basics + ',' + diameter + ',' + radius + ',' + number_connected_components + ',' + density + ','+ index_pi_eta + ','+ cyclomatic_number + ','+ index_alpha_beta_gamma + ',' + average_shortest_path_length + '}'
+    print(s)
+
 
 
 #/////////////////////////////////////////////////////////////////////
@@ -244,7 +307,7 @@ def main(shapefile, nomMethode):
         - diameter
         - radius
         - number_connected_component
-        
+
         - density
         - index_alpha_beta_gamma
         - index_pi_eta
@@ -258,6 +321,8 @@ def main(shapefile, nomMethode):
         - average_shortest_path_length
         - clustering_coefficient
         - average_clustering_coefficient
+
+        - all
     """
 
     try:
@@ -324,6 +389,9 @@ def main(shapefile, nomMethode):
 
         elif nomMethode == "average_shortest_path_length":
             fun_average_shortest_path_length(G,"LENGTH")
+
+        elif nomMethode == "all":
+            fun_all(G,"LENGTH")
 
         else :
             print("nom de méthode non défini")
