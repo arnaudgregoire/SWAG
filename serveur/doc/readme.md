@@ -1,6 +1,6 @@
 # Documentation programmeur Serveur Node
 
-Ici sont documentés les différentes fonctions qui composent le serveur Node
+Ici sont documentées les différentes fonctions qui composent le serveur Node
 
  - dezip
  - python_call
@@ -17,7 +17,7 @@ Paramètre :
 
  Description :
 
- Dézipe le l'archive avec le nom "name.zip" et enregistre les différents fichiers contenus dans l'archive dans le sous répertoire python/shp
+ Dézipe l'archive avec le nom "name.zip" et enregistre les différents fichiers contenus dans l'archive dans le sous répertoire python/shp
 
 
 ## python_call
@@ -61,4 +61,4 @@ Retour :
 
  Description :
 
-Transformation de chaine de caractère contenus dans le formdata en matrice Uint8array
+Transformation de chaine de caractère contenue dans le formdata en matrice Uint8array
