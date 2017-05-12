@@ -367,33 +367,38 @@ window.onload = function(){
     xhr.onreadystatechange = function(){
       if(xhr.readyState == 4 && xhr.status == 200){
         console.log(xhr.responseText);
-        var json = JSON.parse(xhr.responseText);
-
-        if(optionAll){
-          graph.nb_nodes = json.basics.nb_nodes;
-          graph.nb_edges = json.basics.nb_edges;
-          graph.total_length = json.basics.total_length;
-          graph.diameter = json.diameter;
-          graph.radius = json.radius;
-          graph.nb_connected_components = json.number_connected_components;
-          graph.density = parseFloat(json.density).toPrecision(5);
-          graph.pi = parseFloat(json.index_pi_eta.pi).toPrecision(5);
-          graph.eta = parseFloat(json.index_pi_eta.eta).toPrecision(5);
-          graph.alpha = parseFloat(json.index_alpha_beta_gamma.alpha).toPrecision(5);
-          graph.beta = parseFloat(json.index_alpha_beta_gamma.beta).toPrecision(5);
-          graph.gamma = parseFloat(json.index_alpha_beta_gamma.gamma).toPrecision(5);
-          graph.cyclomatic_number = json.cyclomatic_number;
-          graph.shortest_path = parseFloat(json.average_shortest_path_length).toPrecision(8);
+        if(xhr.responseText == "erreur"){
+          alert("Erreur d'analyse", 2000);
         }
         else{
-          graph.nb_nodes = json.basics.nb_nodes;
-          graph.nb_edges = json.basics.nb_edges;
-          graph.total_length = json.basics.total_length;
-        }
+          var json = JSON.parse(xhr.responseText);
 
-        set_result_window(graph);
-        if(DOM_window_action.classList.contains("fa-window-maximize")){
-          toggle_result_window();
+          if(optionAll){
+            graph.nb_nodes = json.basics.nb_nodes;
+            graph.nb_edges = json.basics.nb_edges;
+            graph.total_length = json.basics.total_length;
+            graph.diameter = json.diameter;
+            graph.radius = json.radius;
+            graph.nb_connected_components = json.number_connected_components;
+            graph.density = parseFloat(json.density).toPrecision(5);
+            graph.pi = parseFloat(json.index_pi_eta.pi).toPrecision(5);
+            graph.eta = parseFloat(json.index_pi_eta.eta).toPrecision(5);
+            graph.alpha = parseFloat(json.index_alpha_beta_gamma.alpha).toPrecision(5);
+            graph.beta = parseFloat(json.index_alpha_beta_gamma.beta).toPrecision(5);
+            graph.gamma = parseFloat(json.index_alpha_beta_gamma.gamma).toPrecision(5);
+            graph.cyclomatic_number = json.cyclomatic_number;
+            graph.shortest_path = parseFloat(json.average_shortest_path_length).toPrecision(8);
+          }
+          else{
+            graph.nb_nodes = json.basics.nb_nodes;
+            graph.nb_edges = json.basics.nb_edges;
+            graph.total_length = json.basics.total_length;
+          }
+
+          set_result_window(graph);
+          if(DOM_window_action.classList.contains("fa-window-maximize")){
+            toggle_result_window();
+          }
         }
 
         busy = false;
@@ -450,13 +455,17 @@ window.onload = function(){
 
     xhr.onreadystatechange = function(){
       if(xhr.readyState == 4 && xhr.status == 200){
-        console.log(xhr.responseText);
-        // var json = JSON.parse(xhr.responseText);
-        callback(xhr.responseText);
+        // console.log(xhr.responseText);
+        if(xhr.responseText == "erreur"){
+          alert("Erreur d'analyse", 2000);
+        }
+        else{
+          callback(xhr.responseText);
 
-        set_result_window(graph);
-        if(DOM_window_action.classList.contains("fa-window-maximize")){
-          toggle_result_window();
+          set_result_window(graph);
+          if(DOM_window_action.classList.contains("fa-window-maximize")){
+            toggle_result_window();
+          }
         }
 
         busy = false;
@@ -626,7 +635,7 @@ window.onload = function(){
     var unique = value_list.filter(function(v,i,self){ return self.indexOf(v) === i; });
 
     // Dans le cas d'un faible nombre de valeurs, ont créé une liste de couleur à appliquer pour plus de visibilité
-    if(unique.length <= 10){
+    if(unique.length <= 5){
       unique = unique.map(function(x){ return (x-min)/(max-min); }); // normalisation des valeurs
       unique.sort();    // tris des valeurs
       true_color = false;
@@ -656,7 +665,7 @@ window.onload = function(){
 
       coord = node[0].split(",");
       x = parseFloat(coord[0]);
-      y = parseFloat(coord[1]);
+      y = -parseFloat(coord[1]);
 
       result += '{"id": ' + String(i-1) + ', "x": ' + String(x) + ', "y": ' + String(y) + ', "color": "' + color + '"},';
     }
@@ -667,24 +676,29 @@ window.onload = function(){
 
   function color_map(value){
     var r,g,b;
-    if(value <= 0.25){
+    if(value <= 0.2){   // bleu
       r = 0;
-      g = 255 * value*4;
+      g = 0;
       b = 255;
     }
-    else if(value <= 0.5){
+    else if(value <= 0.4){   // cyan
       r = 0;
       g = 255;
-      b = 255 * (1 - (value-0.25)*4);
+      b = 255;
     }
-    else if(value <= 0.75){
-      r = 255 * (value-0.5)*4;
+    else if(value <= 0.6){   // vert
+      r = 0;
       g = 255;
       b = 0;
     }
-    else{
+    else if(value <= 0.8){   // jaune
       r = 255;
-      g = 255 * (1 - (value-0.75)*4);
+      g = 255;
+      b = 0;
+    }
+    else{   // rouge
+      r = 255;
+      g = 0;
       b = 0;
     }
     return [r,g,b];
