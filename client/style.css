@@ -261,7 +261,7 @@ html, body{
   height: 0;
   width: 400px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   transition: all 0.2s;
   -webkit-transition: all 0.2s;
 }
@@ -279,6 +279,7 @@ html, body{
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(0,0,0,0.4);
+  z-index: 500;
 }
 #result_tab_name p{
   margin: 0;
