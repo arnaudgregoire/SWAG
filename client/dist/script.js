@@ -151,24 +151,9 @@ window.onload = function(){
     DOM_window_action.addEventListener("click", toggle_result_window, false);
     busy = false;
 
-    DOM_link_result_main.addEventListener('click', function(){
-      DOM_link_result_main.classList.add('selected');
-      DOM_link_result_centrality.classList.remove("selected");
-      DOM_link_result_clustering.classList.remove("selected");
-      DOM_result_tabs.style.marginLeft = "0";
-    });
-    DOM_link_result_centrality.addEventListener('click', function(){
-      DOM_link_result_centrality.classList.add('selected');
-      DOM_link_result_main.classList.remove("selected");
-      DOM_link_result_clustering.classList.remove("selected");
-      DOM_result_tabs.style.marginLeft = "-400px";
-    });
-    DOM_link_result_clustering.addEventListener('click', function(){
-      DOM_link_result_clustering.classList.add('selected');
-      DOM_link_result_main.classList.remove("selected");
-      DOM_link_result_centrality.classList.remove("selected");
-      DOM_result_tabs.style.marginLeft = "-800px";
-    });
+    DOM_link_result_main.addEventListener('click', set_result_window_style);
+    DOM_link_result_centrality.addEventListener('click', set_result_window_style);
+    DOM_link_result_clustering.addEventListener('click', set_result_window_style);
 
     music = new Audio("dist/audio1.mp3");
     music.loop = true;
@@ -543,36 +528,37 @@ window.onload = function(){
 
       case "degree_centrality":
         f = function(text){
-          t = text_to_json(text);
-          graph.degree_centrality = JSON.parse(t);
+          var g = text_to_json(text);
+          graph.degree_centrality = g;
+          console.log(graph.degree_centrality);
         }
         break;
 
       case "closeness_centrality":
         f = function(text){
-          t = text_to_json(text);
-          graph.closeness_centrality = JSON.parse(t);
+          var g = text_to_json(text);
+          graph.closeness_centrality = g;
         }
         break;
 
       case "betweenness_centrality":
         f = function(text){
-          t = text_to_json(text);
-          graph.betweenness_centrality = JSON.parse(t);
+          var g = text_to_json(text);
+          graph.betweenness_centrality = g;
         }
         break;
 
       case "eigenvector_centrality":
         f = function(text){
-          t = text_to_json(text);
-          graph.eigenvector_centrality = JSON.parse(t);
+          var g = text_to_json(text);
+          graph.eigenvector_centrality = g;
         }
         break;
 
       case "katz_centrality":
         f = function(text){
-          t = text_to_json(text);
-          graph.katz_centrality = JSON.parse(t);
+          var g = text_to_json(text);
+          graph.katz_centrality = g;
         }
         break;
 
@@ -585,8 +571,8 @@ window.onload = function(){
 
       case "clustering_coefficient":
         f = function(text){
-          t = text_to_json(text);
-          graph.clustering_coeff = JSON.parse(t);
+          var g = text_to_json(text);
+          graph.clustering_coeff = g;
         }
         break;
 
@@ -646,52 +632,80 @@ window.onload = function(){
         rgb = color_map(step);
         color_list.push( "rgb("+String(rgb[0])+","+String(rgb[1])+","+String(rgb[2])+")" );    // création de la liste des couleurs disponible
       }
-      console.log(color_list);
     }
 
-    var result = '{"nodes": [';
+    // met en place la liste des noeuds pour l'affichage du graphe
+    var node_list = [];
     var coord, x, y, rgb, color;
+    value_list = [];
     for(var i=1; i<liste.length; i++){
       node = liste[i].split(":");
       value = (parseFloat(node[1]) - min) / (max - min);
+      value_list.push(value);
 
       if(true_color){
-        rgb = color_map(value)
+        rgb = color_map(value);
         color = "rgb("+String(rgb[0])+","+String(rgb[1])+","+String(rgb[2])+")";
       }
-      else{
-        color = color_list[unique.indexOf(value)];
-      }
+      else{ color = color_list[unique.indexOf(value)]; }
 
       coord = node[0].split(",");
       x = parseFloat(coord[0]);
       y = -parseFloat(coord[1]);
 
-      result += '{"id": ' + String(i-1) + ', "x": ' + String(x) + ', "y": ' + String(y) + ', "color": "' + color + '"},';
+      node_list.push({id: String(i-1), x: String(x), y: String(y), color: color});
     }
 
-    result = result.substring(0,result.length-1) + "]}";
+    // calcul statistiques sur le grpahe, pour l'affichage en diagramme en barre.
+    var n_0 = 0, n_1 = 0, n_2 = 0, n_3 = 0, n_4 = 0, n_5 = 0, n_6 = 0, n_7 = 0, n_8 = 0, n_9 = 0;
+    for(var i=0; i<value_list.length; i++) {
+      if(value_list[i] < 0.1){ n_0++; }
+      else if(value_list[i] < 0.2){ n_1++; }
+      else if(value_list[i] < 0.3){ n_2++; }
+      else if(value_list[i] < 0.4){ n_3++; }
+      else if(value_list[i] < 0.5){ n_4++; }
+      else if(value_list[i] < 0.6){ n_5++; }
+      else if(value_list[i] < 0.6){ n_6++; }
+      else if(value_list[i] < 0.7){ n_7++; }
+      else if(value_list[i] < 0.9){ n_8++; }
+      else{ n_9++; }
+    }
+
+    var result = {
+      nodes: node_list,
+      n_0: n_0,
+      n_1: n_1,
+      n_2: n_2,
+      n_3: n_3,
+      n_4: n_4,
+      n_5: n_5,
+      n_6: n_6,
+      n_7: n_7,
+      n_8: n_8,
+      n_9: n_9
+    }
+
     return result;
   }
 
   function color_map(value){
     var r,g,b;
-    if(value <= 0.2){   // bleu
+    if(value < 0.2){   // bleu
       r = 0;
       g = 0;
       b = 255;
     }
-    else if(value <= 0.4){   // cyan
+    else if(value < 0.4){   // cyan
       r = 0;
       g = 255;
       b = 255;
     }
-    else if(value <= 0.6){   // vert
+    else if(value < 0.6){   // vert
       r = 0;
       g = 255;
       b = 0;
     }
-    else if(value <= 0.8){   // jaune
+    else if(value < 0.8){   // jaune
       r = 255;
       g = 255;
       b = 0;
@@ -798,7 +812,7 @@ window.onload = function(){
       DOM_window_action.classList.remove("fa-window-maximize");
       DOM_window_action.classList.add("fa-window-minimize");
 
-      DOM_result.style.height = "380px";
+      DOM_result.style.height = "400px";
     }
   }
 
@@ -827,65 +841,185 @@ window.onload = function(){
     </div></div> \
     <div> \
       <div class='result_section'> <p><span>Degré</span></p> \
-        <div class='graph_visu' id='result_degree_centrality'></div> </div> \
+        <input type='checkbox' id='option_bar_degree' class='graph_visu_option'><label for='option_bar_degree'>Histogramme</label> \
+        <div class='graph_visu'> <div id='result_degree_centrality'></div> <div id='result_bar_degree'></div> </div> \
+      </div> \
       <div class='result_section'> <p><span>Proximité</span></p> \
-        <div class='graph_visu' id='result_closeness_centrality'></div> </div> \
+        <input type='checkbox' id='option_bar_closeness' class='graph_visu_option'><label for='option_bar_closeness'>Histogramme</label> \
+        <div class='graph_visu'> <div id='result_closeness_centrality'></div> <div id='result_bar_closeness'></div> </div> \
+      </div> \
       <div class='result_section'> <p><span>Intermédiaire</span></p> \
-        <div class='graph_visu' id='result_betweenness_centrality'></div> </div> \
+        <input type='checkbox' id='option_bar_betweenness' class='graph_visu_option'><label for='option_bar_betweenness'>Histogramme</label> \
+        <div class='graph_visu'> <div id='result_betweenness_centrality'></div> <div id='result_bar_betweenness'></div> </div> \
+      </div> \
       <div class='result_section'> <p><span>Vecteur Propre</span></p> \
-        <div class='graph_visu' id='result_eigenvector_centrality'></div> </div> \
+        <input type='checkbox' id='option_bar_eigenvector' class='graph_visu_option'><label for='option_bar_eigenvector'>Histogramme</label> \
+        <div class='graph_visu'> <div id='result_eigenvector_centrality'></div> <div id='result_bar_eigenvector'></div> </div> \
+      </div> \
       <div class='result_section'> <p><span>Katz</span></p> \
-        <div class='graph_visu' id='result_katz_centrality'></div> </div> \
+        <input type='checkbox' id='option_bar_katz' class='graph_visu_option'><label for='option_bar_katz'>Histogramme</label> \
+        <div class='graph_visu'> <div id='result_katz_centrality'></div> <div id='result_bar_katz'></div> </div> \
+      </div> \
     </div> \
     <div> \
       <div class='result_section'> \
         <p><span>Clustering moyen:</span> "+graph.average_clustering_coeff+"</p> \
-        <div class='graph_visu' id='result_clustering_coeff'></div> \
+        <input type='checkbox' id='option_bar_clustering' class='graph_visu_option'><label for='option_bar_clustering'>Histogramme</label> \
+        <div class='graph_visu'> <div id='result_clustering_coeff'></div> <div id='result_bar_clustering'></div> </div> \
       </div> \
     </div>";
 
     set_graph_visualization(graph);
   }
 
+  function set_result_window_style(e){
+    var id = e.target.id
+    DOM_link_result_main.classList.remove('selected');
+    DOM_link_result_centrality.classList.remove("selected");
+    DOM_link_result_clustering.classList.remove("selected");
+
+    switch(id){
+      case "link_result_main":
+        DOM_link_result_main.classList.add('selected');
+        DOM_result_tabs.style.marginLeft = "0";
+        break;
+
+      case "link_result_centrality":
+        DOM_link_result_centrality.classList.add('selected');
+        DOM_result_tabs.style.marginLeft = "-400px";
+        break;
+
+      case "link_result_clustering":
+        DOM_link_result_clustering.classList.add('selected');
+        DOM_result_tabs.style.marginLeft = "-800px";
+        break;
+    }
+  }
+
   function set_graph_visualization(graph){
-    var nodes, edges, container, data;
-    var options = {physics: {enabled: false}, interaction: {dragNodes: false, hover: false, selectable: false}};
+    var nodes, edges, container, container2, data, data2;
+    var option_network = {physics: {enabled: false}, interaction: {dragNodes: false, hover: false, selectable: false}};
+    var option_bar = {style: 'bar', width: '100%', height: '100%', drawPoints: false, orientation: 'top',
+                  start: "2000-01-01", end: "2000-01-11", showMajorLabels: false, format: {minorLabels: {day: '0,D', weekday: '0,D'}} };
 
     if(graph.degree_centrality != ""){
-      console.log(graph.degree_centrality);
       container = document.getElementById("result_degree_centrality");
       data = {nodes: new vis.DataSet(graph.degree_centrality.nodes), edges: new vis.DataSet([])};
-      var network_degree = new vis.Network(container, data, options);
+      var network_degree = new vis.Network(container, data, option_network);
+
+      container2 = document.getElementById("result_bar_degree");
+      var items = [{x: "2000-01-01", end: "2000-01-02", y: graph.degree_centrality.n_0},
+                  {x: "2000-01-02", end: "2000-01-03", y: graph.degree_centrality.n_1},
+                  {x: "2000-01-03", end: "2000-01-04", y: graph.degree_centrality.n_2},
+                  {x: "2000-01-04", end: "2000-01-05", y: graph.degree_centrality.n_3},
+                  {x: "2000-01-05", end: "2000-01-06", y: graph.degree_centrality.n_4},
+                  {x: "2000-01-06", end: "2000-01-07", y: graph.degree_centrality.n_5},
+                  {x: "2000-01-07", end: "2000-01-08", y: graph.degree_centrality.n_6},
+                  {x: "2000-01-08", end: "2000-01-09", y: graph.degree_centrality.n_7},
+                  {x: "2000-01-09", end: "2000-01-10", y: graph.degree_centrality.n_8},
+                  {x: "2000-01-010", end: "2000-01-11", y: graph.degree_centrality.n_9}];
+      data2 = new vis.DataSet(items);
+      var graph_2d_degree = new vis.Graph2d(container2, data2, option_bar);
     }
 
     if(graph.closeness_centrality != ""){
       container = document.getElementById("result_closeness_centrality");
       data = {nodes: new vis.DataSet(graph.closeness_centrality.nodes), edges: new vis.DataSet([])};
-      var network_centrality = new vis.Network(container, data, options);
+      var network_closeness = new vis.Network(container, data, option_network);
+
+      container2 = document.getElementById("result_bar_closeness");
+      var items = [{x: "2000-01-01", end: "2000-01-02", y: graph.closeness_centrality.n_0},
+                  {x: "2000-01-02", end: "2000-01-03", y: graph.closeness_centrality.n_1},
+                  {x: "2000-01-03", end: "2000-01-04", y: graph.closeness_centrality.n_2},
+                  {x: "2000-01-04", end: "2000-01-05", y: graph.closeness_centrality.n_3},
+                  {x: "2000-01-05", end: "2000-01-06", y: graph.closeness_centrality.n_4},
+                  {x: "2000-01-06", end: "2000-01-07", y: graph.closeness_centrality.n_5},
+                  {x: "2000-01-07", end: "2000-01-08", y: graph.closeness_centrality.n_6},
+                  {x: "2000-01-08", end: "2000-01-09", y: graph.closeness_centrality.n_7},
+                  {x: "2000-01-09", end: "2000-01-10", y: graph.closeness_centrality.n_8},
+                  {x: "2000-01-010", end: "2000-01-11", y: graph.closeness_centrality.n_9}];
+      data2 = new vis.DataSet(items);
+      var graph_2d_closeness = new vis.Graph2d(container2, data2, option_bar);
     }
 
     if(graph.betweenness_centrality != ""){
       container = document.getElementById("result_betweenness_centrality");
       data = {nodes: new vis.DataSet(graph.betweenness_centrality.nodes), edges: new vis.DataSet([])};
-      var network_betweenness = new vis.Network(container, data, options);
+      var network_betweenness = new vis.Network(container, data, option_network);
+
+      container2 = document.getElementById("result_bar_betweenness");
+      var items = [{x: "2000-01-01", end: "2000-01-02", y: graph.betweenness_centrality.n_0},
+                  {x: "2000-01-02", end: "2000-01-03", y: graph.betweenness_centrality.n_1},
+                  {x: "2000-01-03", end: "2000-01-04", y: graph.betweenness_centrality.n_2},
+                  {x: "2000-01-04", end: "2000-01-05", y: graph.betweenness_centrality.n_3},
+                  {x: "2000-01-05", end: "2000-01-06", y: graph.betweenness_centrality.n_4},
+                  {x: "2000-01-06", end: "2000-01-07", y: graph.betweenness_centrality.n_5},
+                  {x: "2000-01-07", end: "2000-01-08", y: graph.betweenness_centrality.n_6},
+                  {x: "2000-01-08", end: "2000-01-09", y: graph.betweenness_centrality.n_7},
+                  {x: "2000-01-09", end: "2000-01-10", y: graph.betweenness_centrality.n_8},
+                  {x: "2000-01-010", end: "2000-01-11", y: graph.betweenness_centrality.n_9}];
+      data2 = new vis.DataSet(items);
+      var graph_2d_betweenness = new vis.Graph2d(container2, data2, option_bar);
     }
 
     if(graph.eigenvector_centrality != ""){
       container = document.getElementById("result_eigenvector_centrality");
       data = {nodes: new vis.DataSet(graph.eigenvector_centrality.nodes), edges: new vis.DataSet([])};
-      var network_eigenvector = new vis.Network(container, data, options);
+      var network_eigenvector = new vis.Network(container, data, option_network);
+
+      container2 = document.getElementById("result_bar_eigenvector");
+      var items = [{x: "2000-01-01", end: "2000-01-02", y: graph.eigenvector_centrality.n_0},
+                  {x: "2000-01-02", end: "2000-01-03", y: graph.eigenvector_centrality.n_1},
+                  {x: "2000-01-03", end: "2000-01-04", y: graph.eigenvector_centrality.n_2},
+                  {x: "2000-01-04", end: "2000-01-05", y: graph.eigenvector_centrality.n_3},
+                  {x: "2000-01-05", end: "2000-01-06", y: graph.eigenvector_centrality.n_4},
+                  {x: "2000-01-06", end: "2000-01-07", y: graph.eigenvector_centrality.n_5},
+                  {x: "2000-01-07", end: "2000-01-08", y: graph.eigenvector_centrality.n_6},
+                  {x: "2000-01-08", end: "2000-01-09", y: graph.eigenvector_centrality.n_7},
+                  {x: "2000-01-09", end: "2000-01-10", y: graph.eigenvector_centrality.n_8},
+                  {x: "2000-01-010", end: "2000-01-11", y: graph.eigenvector_centrality.n_9}];
+      data2 = new vis.DataSet(items);
+      var graph_2d_eigenvector = new vis.Graph2d(container2, data2, option_bar);
     }
 
     if(graph.katz_centrality != ""){
       container = document.getElementById("result_katz_centrality");
       data = {nodes: new vis.DataSet(graph.katz_centrality.nodes), edges: new vis.DataSet([])};
-      var network_katz_centrality = new vis.Network(container, data, options);
+      var network_katz = new vis.Network(container, data, option_network);
+
+      container2 = document.getElementById("result_bar_katz");
+      var items = [{x: "2000-01-01", end: "2000-01-02", y: graph.katz_centrality.n_0},
+                  {x: "2000-01-02", end: "2000-01-03", y: graph.katz_centrality.n_1},
+                  {x: "2000-01-03", end: "2000-01-04", y: graph.katz_centrality.n_2},
+                  {x: "2000-01-04", end: "2000-01-05", y: graph.katz_centrality.n_3},
+                  {x: "2000-01-05", end: "2000-01-06", y: graph.katz_centrality.n_4},
+                  {x: "2000-01-06", end: "2000-01-07", y: graph.katz_centrality.n_5},
+                  {x: "2000-01-07", end: "2000-01-08", y: graph.katz_centrality.n_6},
+                  {x: "2000-01-08", end: "2000-01-09", y: graph.katz_centrality.n_7},
+                  {x: "2000-01-09", end: "2000-01-10", y: graph.katz_centrality.n_8},
+                  {x: "2000-01-010", end: "2000-01-11", y: graph.katz_centrality.n_9}];
+      data2 = new vis.DataSet(items);
+      var graph_2d_katz = new vis.Graph2d(container2, data2, option_bar);
     }
 
     if(graph.clustering_coeff != ""){
       container = document.getElementById("result_clustering_coeff");
       data = {nodes: new vis.DataSet(graph.clustering_coeff.nodes), edges: new vis.DataSet([])};
-      var network_clustering_coeff = new vis.Network(container, data, options);
+      var network_clustering = new vis.Network(container, data, option_network);
+
+      container2 = document.getElementById("result_bar_clustering");
+      var items = [{x: "2000-01-01", end: "2000-01-02", y: graph.clustering_coeff.n_0},
+                  {x: "2000-01-02", end: "2000-01-03", y: graph.clustering_coeff.n_1},
+                  {x: "2000-01-03", end: "2000-01-04", y: graph.clustering_coeff.n_2},
+                  {x: "2000-01-04", end: "2000-01-05", y: graph.clustering_coeff.n_3},
+                  {x: "2000-01-05", end: "2000-01-06", y: graph.clustering_coeff.n_4},
+                  {x: "2000-01-06", end: "2000-01-07", y: graph.clustering_coeff.n_5},
+                  {x: "2000-01-07", end: "2000-01-08", y: graph.clustering_coeff.n_6},
+                  {x: "2000-01-08", end: "2000-01-09", y: graph.clustering_coeff.n_7},
+                  {x: "2000-01-09", end: "2000-01-10", y: graph.clustering_coeff.n_8},
+                  {x: "2000-01-010", end: "2000-01-11", y: graph.clustering_coeff.n_9}];
+      data2 = new vis.DataSet(items);
+      var graph_2d_clustering = new vis.Graph2d(container2, data2, option_bar);
     }
   }
 
