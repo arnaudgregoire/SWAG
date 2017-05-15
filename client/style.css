@@ -225,8 +225,8 @@ html, body{
   border: 2px solid rgba(0,0,0,0.5);
   transform: translateY(-50%);
   -webkit-transform: translateY(-50%);
-  transition: all 0.1s;
-  -webkit-transition: all 0.1s;
+  transition: all 0.15s;
+  -webkit-transition: all 0.15s;
 }
 #map_button + label:hover::before{
   background: #ccc;
@@ -250,8 +250,10 @@ html, body{
 .window{
   position: absolute;
   right: 10px;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.6);
   cursor: pointer;
+  transition: all 0.15s;
+  -webkit-transition: all 0.15s;
 }
 .window:hover{
   color: rgba(255,255,255,1);
@@ -318,6 +320,7 @@ html, body{
 }
 
 .result_section{
+  position: relative;
   padding: 10px;
   margin: 0;
   display: flex;
@@ -329,8 +332,7 @@ html, body{
 }
 
 .result_section p{
-  margin: 2px 10px;
-  padding: 2px;
+  margin: 4px 8px;
   min-width: 150px;
 }
 .result_section p.small_result{
@@ -344,13 +346,57 @@ html, body{
   font-weight: bold;
 }
 
+
 .graph_visu{
+  position: relative;
   display: block;
-  margin: 5px auto;
-  width: 95%;
-  height: 250px;
+  margin: 4px 8px;
+  width: 90%;
+  height: 240px;
   border: 2px solid rgba(0,0,0,0.3);
 }
+.graph_visu>div{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/*.graph_visu>div:last-child{
+  opacity: 0;
+}*/
+
+.graph_visu_option{
+  display: none;
+}
+.graph_visu_option + label{
+  display: block;
+  float: left;
+  margin: 4px 12px 4px auto;
+  padding: 4px;
+  color: #000;
+  background: #fff;
+  border: 2px solid #fff;
+  text-align: center;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.15s;
+  -webkit-transition: all 0.15s;
+}
+.graph_visu_option + label:hover{
+  border-color: #3498db;
+}
+.graph_visu_option:checked + label{
+  color: #fff;
+  background: #3498db;
+  border-color: #3498db;
+}
+
+.graph_visu_option ~ .graph_visu>div:first-child{ visibility: visible; }
+.graph_visu_option ~ .graph_visu>div:last-child{ visibility: collapse; }
+.graph_visu_option:checked ~ .graph_visu>div:first-child{ visibility: collapse; }
+.graph_visu_option:checked ~ .graph_visu>div:last-child{ visibility: visible; }
 
 
 
