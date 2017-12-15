@@ -1,4 +1,6 @@
 # Création d’une plateforme Web d’analyse de réseaux spatiaux
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
 ## SWAN : Service Web d'Analyse de Graphes
 ### Objectifs pour le groupe d’ingénieurs
 Concevoir et mettre en place une plateforme Web permettant 
